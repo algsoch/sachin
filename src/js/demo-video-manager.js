@@ -2,17 +2,18 @@
 class DemoVideoManager {
     constructor() {
         this.demoVideos = {
-            // Using sample videos from a reliable source
-            'trading-1': 'https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4',
-            'trading-2': 'https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_2mb.mp4',
-            'trading-3': 'https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_3mb.mp4',
-            'trading-4': 'https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_4mb.mp4',
-            'motion-graphic-1': 'https://sample-videos.com/zip/10/mp4/SampleVideo_640x360_1mb.mp4',
-            'motion-graphic-2': 'https://sample-videos.com/zip/10/mp4/SampleVideo_640x360_2mb.mp4',
-            'motion-graphic-3': 'https://sample-videos.com/zip/10/mp4/SampleVideo_640x360_3mb.mp4',
-            'educational': 'https://sample-videos.com/zip/10/mp4/SampleVideo_720x480_1mb.mp4',
-            'educational-2': 'https://sample-videos.com/zip/10/mp4/SampleVideo_720x480_2mb.mp4',
-            'sub-video': 'https://sample-videos.com/zip/10/mp4/SampleVideo_720x480_3mb.mp4'
+            // Using your actual videos from assets folder
+            'trading-1': 'assets/trading (1).mp4',
+            'trading-2': 'assets/trading (2).mp4',
+            'trading-3': 'assets/trading (3).mp4',
+            'trading-4': 'assets/trading (4).mp4',
+            'trading-5': 'assets/tradind 5.mp4',
+            'motion-graphic-1': 'assets/motion graphic (1).mp4',
+            'motion-graphic-2': 'assets/motion graphic (2).mp4',
+            'motion-graphic-3': 'assets/motion graphic (3).mp4',
+            'educational': 'assets/educational.mp4',
+            'educational-2': 'assets/educational (2).mp4',
+            'sub-video': 'assets/sub vdo.mp4'
         };
         
         this.fallbackContent = {
@@ -20,6 +21,7 @@ class DemoVideoManager {
             'trading-2': { title: 'Market Movement Analysis', category: 'trading' },
             'trading-3': { title: 'Forex Trading Strategy', category: 'trading' },
             'trading-4': { title: 'Crypto Trading Guide', category: 'trading' },
+            'trading-5': { title: 'Advanced Trading Setup', category: 'trading' },
             'motion-graphic-1': { title: 'Motion Graphics Reel', category: 'graphics' },
             'motion-graphic-2': { title: 'Property Showcase', category: 'realestate' },
             'motion-graphic-3': { title: 'Brand Promotion', category: 'promo' },
@@ -30,25 +32,21 @@ class DemoVideoManager {
     }
 
     init() {
-        console.log('🎬 Demo Video Manager: Initializing...');
+        console.log('🎬 Demo Video Manager: Initializing with your actual videos...');
         this.replaceVideoSources();
-        this.createVideoPlaceholders();
         this.setupErrorHandling();
-        this.removeUploadNotices();
+        console.log('✅ Your videos from assets folder are now active!');
     }
 
     replaceVideoSources() {
-        // Replace all video sources with working URLs or placeholders
+        // Replace all video sources with your actual videos
         document.querySelectorAll('video source').forEach(source => {
             const currentSrc = source.getAttribute('src');
             if (currentSrc && currentSrc.includes('assets/')) {
                 const videoKey = this.extractVideoKey(currentSrc);
                 if (this.demoVideos[videoKey]) {
                     source.setAttribute('src', this.demoVideos[videoKey]);
-                    console.log(`✅ Updated: ${currentSrc} -> ${this.demoVideos[videoKey]}`);
-                } else {
-                    // Create placeholder
-                    this.createPlaceholderForVideo(source.parentElement);
+                    console.log(`✅ Using your video: ${currentSrc} -> ${this.demoVideos[videoKey]}`);
                 }
             }
         });
@@ -60,9 +58,7 @@ class DemoVideoManager {
                 const videoKey = this.extractVideoKey(currentSrc);
                 if (this.demoVideos[videoKey]) {
                     video.setAttribute('src', this.demoVideos[videoKey]);
-                    console.log(`✅ Updated video: ${currentSrc} -> ${this.demoVideos[videoKey]}`);
-                } else {
-                    this.createPlaceholderForVideo(video);
+                    console.log(`✅ Using your video: ${currentSrc} -> ${this.demoVideos[videoKey]}`);
                 }
             }
         });
@@ -72,16 +68,17 @@ class DemoVideoManager {
         // Extract key from paths like "assets/trading (1).mp4"
         const filename = src.split('/').pop().toLowerCase();
         
-        if (filename.includes('trading (1)') || filename.includes('trading-1')) return 'trading-1';
-        if (filename.includes('trading (2)') || filename.includes('trading-2')) return 'trading-2';
-        if (filename.includes('trading (3)') || filename.includes('trading-3')) return 'trading-3';
-        if (filename.includes('trading (4)') || filename.includes('trading-4')) return 'trading-4';
-        if (filename.includes('motion graphic (1)') || filename.includes('motion-graphic-1')) return 'motion-graphic-1';
-        if (filename.includes('motion graphic (2)') || filename.includes('motion-graphic-2')) return 'motion-graphic-2';
-        if (filename.includes('motion graphic (3)') || filename.includes('motion-graphic-3')) return 'motion-graphic-3';
-        if (filename.includes('educational (2)') || filename.includes('educational-2')) return 'educational-2';
-        if (filename.includes('educational.mp4') || filename.includes('educational')) return 'educational';
-        if (filename.includes('sub vdo') || filename.includes('sub-video')) return 'sub-video';
+        if (filename.includes('trading (1)')) return 'trading-1';
+        if (filename.includes('trading (2)')) return 'trading-2';
+        if (filename.includes('trading (3)')) return 'trading-3';
+        if (filename.includes('trading (4)')) return 'trading-4';
+        if (filename.includes('tradind 5')) return 'trading-5';
+        if (filename.includes('motion graphic (1)')) return 'motion-graphic-1';
+        if (filename.includes('motion graphic (2)')) return 'motion-graphic-2';
+        if (filename.includes('motion graphic (3)')) return 'motion-graphic-3';
+        if (filename.includes('educational (2)')) return 'educational-2';
+        if (filename.includes('educational.mp4')) return 'educational';
+        if (filename.includes('sub vdo')) return 'sub-video';
         
         return null;
     }

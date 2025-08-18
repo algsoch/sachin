@@ -587,25 +587,19 @@ function setupRandomFooterBackground() {
 
     // Get Azure video URLs from the Azure Video Manager
     const getAzureVideoUrls = () => {
-        if (window.AzureVideoManager && window.AzureVideoManager.videoUrlMap) {
-            return [
-                window.AzureVideoManager.videoUrlMap['assets/motion graphic (1).mp4'],
-                window.AzureVideoManager.videoUrlMap['assets/motion graphic (2).mp4'],
-                window.AzureVideoManager.videoUrlMap['assets/motion graphic (3).mp4'],
-                window.AzureVideoManager.videoUrlMap['assets/trading (1).mp4'],
-                window.AzureVideoManager.videoUrlMap['assets/trading (2).mp4'],
-                window.AzureVideoManager.videoUrlMap['assets/trading (3).mp4'],
-                window.AzureVideoManager.videoUrlMap['assets/trading (4).mp4'],
-                window.AzureVideoManager.videoUrlMap['assets/educational.mp4'],
-                window.AzureVideoManager.videoUrlMap['assets/educational (2).mp4'],
-                window.AzureVideoManager.videoUrlMap['assets/sub vdo.mp4']
-            ].filter(url => url); // Remove any undefined URLs
-        }
-        // Fallback to placeholder videos if Azure manager not loaded
+        // Use your actual videos from assets folder
         return [
-            'https://azvpstpucyxfsmd2gjc.blob.core.windows.net/videos/motion-graphic-1.mp4',
-            'https://azvpstpucyxfsmd2gjc.blob.core.windows.net/videos/trading-1.mp4',
-            'https://azvpstpucyxfsmd2gjc.blob.core.windows.net/videos/educational.mp4'
+            'assets/motion graphic (1).mp4',
+            'assets/motion graphic (2).mp4',
+            'assets/motion graphic (3).mp4',
+            'assets/trading (1).mp4',
+            'assets/trading (2).mp4',
+            'assets/trading (3).mp4',
+            'assets/trading (4).mp4',
+            'assets/tradind 5.mp4',
+            'assets/educational.mp4',
+            'assets/educational (2).mp4',
+            'assets/sub vdo.mp4'
         ];
     };
 
