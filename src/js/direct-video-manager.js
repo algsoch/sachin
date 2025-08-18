@@ -43,23 +43,64 @@ class DirectVideoManager {
     }
 
     removeAllAzureStuff() {
-        // Kill ALL Azure references
-        document.querySelectorAll('[id*="azure"], [class*="azure"], [data-azure]').forEach(el => el.remove());
-        document.querySelectorAll('*').forEach(el => {
-            if (el.textContent && (
-                el.textContent.includes('Azure') || 
-                el.textContent.includes('Upload') ||
-                el.textContent.includes('upload') ||
-                el.textContent.includes('Loading from Azure') ||
-                el.textContent.includes('Video Loading from Azure')
-            )) {
-                el.remove();
+        // Kill ALL Azure references immediately and aggressively
+        setTimeout(() => {
+            // Remove upload button
+            const uploadBtn = document.getElementById('video-upload-notice');
+            if (uploadBtn) {
+                uploadBtn.remove();
+                console.log('🗑️ REMOVED Azure upload button');
             }
-        });
-        console.log('🗑️ DELETED ALL AZURE REFERENCES!');
+
+            // Remove any Azure loading messages
+            document.querySelectorAll('*').forEach(el => {
+                if (el.textContent && (
+                    el.textContent.includes('Video Loading from Azure') ||
+                    el.textContent.includes('Upload Videos to Azure') ||
+                    el.textContent.includes('High-quality video will appear here') ||
+                    el.textContent.includes('Azure') ||
+                    el.textContent.toLowerCase().includes('upload')
+                )) {
+                    el.remove();
+                    console.log('🗑️ REMOVED Azure message element');
+                }
+            });
+
+            // Remove placeholder divs with Azure messages
+            document.querySelectorAll('.video-placeholder').forEach(placeholder => {
+                placeholder.remove();
+                console.log('🗑️ REMOVED video placeholder');
+            });
+
+            // Remove any elements with Azure-related classes or IDs
+            document.querySelectorAll('[id*="azure"], [class*="azure"], [data-azure], [id*="upload"], [class*="upload"]').forEach(el => {
+                el.remove();
+                console.log('🗑️ REMOVED Azure element');
+            });
+        }, 100);
+
+        // Also run again after 1 second to catch any delayed elements
+        setTimeout(() => {
+            document.querySelectorAll('#video-upload-notice').forEach(el => el.remove());
+            document.querySelectorAll('*').forEach(el => {
+                if (el.textContent && el.textContent.includes('Azure')) {
+                    el.remove();
+                }
+            });
+            console.log('🗑️ SECOND CLEANUP PASS COMPLETED');
+        }, 1000);
+
+        console.log('🗑️ AGGRESSIVE AZURE CLEANUP INITIATED');
     }
 
     loadActualVideos() {
+        // First, aggressively remove ALL placeholder content
+        document.querySelectorAll('.video-placeholder, .thumb').forEach(container => {
+            // Clear ALL content from video containers
+            const placeholderDivs = container.querySelectorAll('div[style*="Video Loading"], div[style*="Azure"]');
+            placeholderDivs.forEach(div => div.remove());
+        });
+
         // Replace ALL video sources with your actual files
         document.querySelectorAll('video').forEach((video, index) => {
             const videoKeys = Object.keys(this.videos);
@@ -80,6 +121,33 @@ class DirectVideoManager {
             video.style.cssText = 'width: 100%; height: 100%; object-fit: cover;';
             
             console.log(`✅ Video ${index + 1}: ${videoPath}`);
+        });
+
+        // Also replace any thumb containers that have placeholder content
+        document.querySelectorAll('.thumb').forEach((thumb, index) => {
+            // Remove all placeholder content
+            const placeholders = thumb.querySelectorAll('div[style*="gradient"], div[style*="Video Loading"], .video-placeholder');
+            placeholders.forEach(p => p.remove());
+
+            // If no video exists, create one
+            if (!thumb.querySelector('video')) {
+                const videoKeys = Object.keys(this.videos);
+                const videoKey = videoKeys[index % videoKeys.length];
+                const videoPath = this.videos[videoKey];
+                
+                const video = document.createElement('video');
+                video.muted = true;
+                video.loop = true;
+                video.style.cssText = 'width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0;';
+                
+                const source = document.createElement('source');
+                source.src = videoPath;
+                source.type = 'video/mp4';
+                video.appendChild(source);
+                
+                thumb.insertBefore(video, thumb.firstChild);
+                console.log(`✅ Added video to thumb: ${videoPath}`);
+            }
         });
     }
 
@@ -214,4 +282,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const manager = new DirectVideoManager();
     manager.init();
     window.DirectVideoManager = manager;
+    
+    // KILL ANY UPLOAD BUTTONS IMMEDIATELY
+    setInterval(() => {
+        const uploadBtn = document.getElementById('video-upload-notice');
+        if (uploadBtn) {
+            uploadBtn.remove();
+            console.log('🗑️ KILLED UPLOAD BUTTON!');
+        }
+        
+        // Remove any Azure text
+        document.querySelectorAll('*').forEach(el => {
+            if (el.textContent && el.textContent.includes('Upload Videos to Azure')) {
+                el.remove();
+                console.log('🗑️ KILLED Azure text!');
+            }
+        });
+    }, 500);
 });
