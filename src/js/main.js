@@ -585,29 +585,41 @@ function setupRandomFooterBackground() {
     const backgroundVideo = document.querySelector('.footer-bg-video');
     if (!backgroundVideo) return;
 
-    // Available video assets for random background
-    const videoAssets = [
-        'assets/motion graphic (1).mp4',
-        'assets/motion graphic (2).mp4', 
-        'assets/motion graphic (3).mp4',
-        'assets/trading (1).mp4',
-        'assets/trading (2).mp4',
-        'assets/trading (3).mp4',
-        'assets/trading (4).mp4',
-        'assets/educational.mp4',
-        'assets/educational (2).mp4',
-        'assets/sub vdo.mp4'
-    ];
+    // Get Azure video URLs from the Azure Video Manager
+    const getAzureVideoUrls = () => {
+        if (window.AzureVideoManager && window.AzureVideoManager.videoUrlMap) {
+            return [
+                window.AzureVideoManager.videoUrlMap['assets/motion graphic (1).mp4'],
+                window.AzureVideoManager.videoUrlMap['assets/motion graphic (2).mp4'],
+                window.AzureVideoManager.videoUrlMap['assets/motion graphic (3).mp4'],
+                window.AzureVideoManager.videoUrlMap['assets/trading (1).mp4'],
+                window.AzureVideoManager.videoUrlMap['assets/trading (2).mp4'],
+                window.AzureVideoManager.videoUrlMap['assets/trading (3).mp4'],
+                window.AzureVideoManager.videoUrlMap['assets/trading (4).mp4'],
+                window.AzureVideoManager.videoUrlMap['assets/educational.mp4'],
+                window.AzureVideoManager.videoUrlMap['assets/educational (2).mp4'],
+                window.AzureVideoManager.videoUrlMap['assets/sub vdo.mp4']
+            ].filter(url => url); // Remove any undefined URLs
+        }
+        // Fallback to placeholder videos if Azure manager not loaded
+        return [
+            'https://azvpstpucyxfsmd2gjc.blob.core.windows.net/videos/motion-graphic-1.mp4',
+            'https://azvpstpucyxfsmd2gjc.blob.core.windows.net/videos/trading-1.mp4',
+            'https://azvpstpucyxfsmd2gjc.blob.core.windows.net/videos/educational.mp4'
+        ];
+    };
 
     let currentVideoIndex = 0;
     
     // Function to change to random video
     function changeToRandomVideo() {
+        const videoAssets = getAzureVideoUrls();
+        
         // Get random video different from current
         let randomIndex;
         do {
             randomIndex = Math.floor(Math.random() * videoAssets.length);
-        } while (randomIndex === currentVideoIndex);
+        } while (randomIndex === currentVideoIndex && videoAssets.length > 1);
         
         currentVideoIndex = randomIndex;
         const newVideoSrc = videoAssets[currentVideoIndex];
@@ -622,6 +634,12 @@ function setupRandomFooterBackground() {
             backgroundVideo.addEventListener('loadeddata', () => {
                 backgroundVideo.style.opacity = '1';
                 backgroundVideo.play().catch(() => {});
+            }, { once: true });
+            
+            // If video fails to load, show placeholder
+            backgroundVideo.addEventListener('error', () => {
+                console.log('Background video failed to load:', newVideoSrc);
+                backgroundVideo.style.opacity = '1';
             }, { once: true });
         }, 500);
     }
