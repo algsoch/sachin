@@ -1,0 +1,44 @@
+{
+  "name": "edited-frame-portfolio",
+  "version": "1.0.0",
+  "description": "A modern, responsive video portfolio website for professional video editing services",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve .",
+    "dev": "python -m http.server 8000",
+    "build": "echo 'No build process needed for static site'",
+    "deploy": "echo 'Deploy to your hosting platform'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourusername/edited-frame-portfolio.git"
+  },
+  "keywords": [
+    "video-editing",
+    "portfolio",
+    "responsive-design",
+    "animations",
+    "css3",
+    "javascript",
+    "html5",
+    "modern-web",
+    "glass-morphism",
+    "video-portfolio"
+  ],
+  "author": {
+    "name": "Sachin Prajapati",
+    "email": "connectwithsachin06@gmail.com",
+    "url": "https://www.instagram.com/edited.frame"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yourusername/edited-frame-portfolio/issues"
+  },
+  "homepage": "https://github.com/yourusername/edited-frame-portfolio#readme",
+  "devDependencies": {
+    "serve": "^14.2.0"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
