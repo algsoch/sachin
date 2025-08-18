@@ -585,8 +585,8 @@ function setupRandomFooterBackground() {
     const backgroundVideo = document.querySelector('.footer-bg-video');
     if (!backgroundVideo) return;
 
-    // Get Azure video URLs from the Azure Video Manager
-    const getAzureVideoUrls = () => {
+    // Get your actual video URLs
+    const getVideoUrls = () => {
         // Use your actual videos from assets folder
         return [
             'assets/motion graphic (1).mp4',
@@ -607,7 +607,7 @@ function setupRandomFooterBackground() {
     
     // Function to change to random video
     function changeToRandomVideo() {
-        const videoAssets = getAzureVideoUrls();
+        const videoAssets = getVideoUrls();
         
         // Get random video different from current
         let randomIndex;
