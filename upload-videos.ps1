@@ -31,10 +31,10 @@ Write-Host "📦 Storage Account: $StorageAccountName" -ForegroundColor Green
 Write-Host "📁 Container: $ContainerName" -ForegroundColor Green
 
 # Get list of video files
-$videoFiles = Get-ChildItem -Path "assets" -Filter "*.mp4" | Where-Object { $_.Length -gt 0 }
+$videoFiles = Get-ChildItem -Path "src\assets" -Filter "*.mp4" | Where-Object { $_.Length -gt 0 }
 
 if ($videoFiles.Count -eq 0) {
-    Write-Host "❌ No video files found in assets folder" -ForegroundColor Red
+    Write-Host "❌ No video files found in src\assets folder" -ForegroundColor Red
     exit 1
 }
 
