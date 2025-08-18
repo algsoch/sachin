@@ -1,0 +1,15 @@
+{
+  "routes": [
+    {
+      "route": "/*",
+      "serve": "/index.html",
+      "statusCode": 200
+    }
+  ],
+  "mimeTypes": {
+    ".mp4": "video/mp4",
+    ".webm": "video/webm",
+    ".ogg": "video/ogg"
+  },
+  "defaultDocuments": ["index.html"]
+}

@@ -7,6 +7,6 @@ infra:
 
 services:
   video-portfolio-web:
-    project: ./
+    project: ./src
     host: staticwebapp
     language: js
