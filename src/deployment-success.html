@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎉 Azure Deployment Successful!</title>
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 800px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        h1 { font-size: 2.5rem; margin-bottom: 20px; }
+        .status { font-size: 1.2rem; margin: 20px 0; }
+        .next-steps {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: left;
+        }
+        .step {
+            margin: 15px 0;
+            padding: 15px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            border-left: 4px solid #4CAF50;
+        }
+        code {
+            background: rgba(0,0,0,0.3);
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+        }
+        .highlight {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎉 Azure Deployment Successful!</h1>
+        
+        <div class="status">
+            ✅ <span class="highlight">Static Web App</span> - Deployed successfully<br>
+            ✅ <span class="highlight">Storage Account</span> - Ready for videos<br>
+            ✅ <span class="highlight">CDN</span> - Global delivery enabled<br>
+            ✅ <span class="highlight">Domain</span> - HTTPS configured
+        </div>
+
+        <div class="next-steps">
+            <h3>📋 Next Steps to Complete Your Video Portfolio:</h3>
+            
+            <div class="step">
+                <strong>Step 1: Upload Your Videos</strong><br>
+                Run the PowerShell script to upload your high-quality videos to Azure Storage:
+                <br><code>.\upload-videos.ps1</code>
+            </div>
+
+            <div class="step">
+                <strong>Step 2: Deploy Updated Site</strong><br>
+                After uploading videos, deploy the updated site:
+                <br><code>azd deploy</code>
+            </div>
+
+            <div class="step">
+                <strong>Step 3: Test Your Portfolio</strong><br>
+                Your video portfolio will be live with full-quality videos and global CDN delivery!
+            </div>
+        </div>
+
+        <div class="status">
+            <h3>🌍 Your Website Information:</h3>
+            <p><strong>URL:</strong> <span id="siteUrl">Loading...</span></p>
+            <p><strong>Storage:</strong> Ready for unlimited video uploads</p>
+            <p><strong>Performance:</strong> Global CDN for fast loading</p>
+            <p><strong>Cost:</strong> ~$5/month for professional hosting</p>
+        </div>
+
+        <script>
+            // Get the current URL and display it
+            document.getElementById('siteUrl').textContent = window.location.origin;
+        </script>
+    </div>
+</body>
+</html>
