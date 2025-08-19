@@ -58,10 +58,22 @@
       <div class="hero-left">
         <h2>I Turn Ideas into <span class="highlight">Eye-Catching Reels</span></h2>
         <div class="hero-subtitle">
-          <span class="subtitle-item">Professional Video Editing</span> • 
-          <span class="subtitle-item">Viral Social Reels</span> • 
-          <span class="subtitle-item">Visual Storytelling</span> • 
-          <span class="subtitle-item">Lightning-Fast Turnaround</span>
+          <div class="subtitle-item">
+            <span class="subtitle-icon">🎬</span>
+            <span class="subtitle-text">Professional Video Editing</span>
+          </div>
+          <div class="subtitle-item">
+            <span class="subtitle-icon">🔥</span>
+            <span class="subtitle-text">Viral Social Reels</span>
+          </div>
+          <div class="subtitle-item">
+            <span class="subtitle-icon">📖</span>
+            <span class="subtitle-text">Visual Storytelling</span>
+          </div>
+          <div class="subtitle-item">
+            <span class="subtitle-icon">⚡</span>
+            <span class="subtitle-text">Lightning-Fast Turnaround</span>
+          </div>
         </div>
         <div class="ctas">
           <button class="btn primary" onclick="scrollToId('portfolio')">
@@ -349,7 +361,7 @@
             <h4>Send Project Details</h4>
             <p>Fill out the form below with your project requirements</p>
           </div>
-          <form id="contactForm" class="contact-form" onsubmit="return sendEmail(event)">
+          <form id="contactForm" class="contact-form" onsubmit="return videoPortfolio.handleContactForm(event)">
             <div class="form-group">
               <label for="name">Your Name *</label>
               <input type="text" id="name" placeholder="John Doe" required>
@@ -382,79 +394,7 @@
     </section>
 
     <footer class="footer">
-      <!-- Dynamic Random Video Background -->
-      <div class="footer-video-background">
-        <video class="footer-bg-video" autoplay muted loop playsinline preload="metadata" loading="lazy">
-          <source src="assets/motion graphic (3).mp4" type="video/mp4">
-        </video>
-        <div class="footer-bg-overlay"></div>
-      </div>
-      
-      <div class="footer-content">
-        <div class="footer-brand">
-          <div class="footer-logo">
-            <img src="assets/logo.jpg" alt="edited.frame" class="footer-logo-img">
-          </div>
-          <div class="footer-info hero-left">
-            <h6>edited.frame</h6>
-            <span>Professional Video Editing</span>
-          </div>
-        </div>
-        
-        <div class="footer-links">
-          <div class="footer-section services-showcase">
-            <h6>Our Portfolio</h6>
-            <div class="service-videos">
-              <div class="service-video-item">
-                <div class="service-video-preview">
-                  <video class="footer-video" muted loop playsinline preload="none" data-src="https://sachi2.blob.core.windows.net/videos/trading%20(1).mp4">
-                    <div class="video-placeholder">📊</div>
-                  </video>
-                  <div class="video-play-btn">▶</div>
-                </div>
-                <span class="service-name">Instagram Reels</span>
-              </div>
-              <div class="service-video-item">
-                <div class="service-video-preview">
-                  <video class="footer-video" muted loop playsinline preload="none" data-src="https://sachi2.blob.core.windows.net/videos/educational.mp4">
-                    <div class="video-placeholder">🎬</div>
-                  </video>
-                  <div class="video-play-btn">▶</div>
-                </div>
-                <span class="service-name">YouTube Shorts</span>
-              </div>
-              <div class="service-video-item">
-                <div class="service-video-preview">
-                  <video class="footer-video" muted loop playsinline preload="none" data-src="https://sachi2.blob.core.windows.net/videos/trading%20(2).mp4">
-                    <div class="video-placeholder">💹</div>
-                  </video>
-                  <div class="video-play-btn">▶</div>
-                </div>
-                <span class="service-name">Trading Videos</span>
-              </div>
-              <div class="service-video-item">
-                <div class="service-video-preview">
-                  <video class="footer-video" muted loop playsinline preload="none" data-src="https://sachi2.blob.core.windows.net/videos/motion%20graphic%20(1).mp4">
-                    <div class="video-placeholder">🏠</div>
-                  </video>
-                  <div class="video-play-btn">▶</div>
-                </div>
-                <span class="service-name">Real Estate</span>
-              </div>
-            </div>
-          </div>
-          
-          <div class="footer-section">
-            <h6>Connect</h6>
-            <ul>
-              <li><a href="mailto:connectwithsachin06@gmail.com">Email</a></li>
-              <li><a href="https://www.instagram.com/edited.frame" target="_blank" rel="noopener noreferrer">Instagram</a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-      
-      <div class="footer-bottom">
+      <div class="footer-content-simple">
         <div class="copyright">
           <span>© 2025 edited.frame</span>
           <span class="separator">•</span>
@@ -465,7 +405,6 @@
           <span class="heart">❤️</span>
           <span>and passion for visual storytelling</span>
         </div>
-        
       </div>
     </footer>
   </div>

@@ -67,10 +67,13 @@ class VideoPortfolio {
         const videoUrl = `assets/${video.filename}`;
         
         card.innerHTML = `
-            <div class="thumb" onclick="videoPortfolio.openLightbox('${videoUrl}')">
-                <video src="${videoUrl}" loop muted playsinline preload="metadata" controls style="width:100%;height:100%;object-fit:cover;border-radius:12px;"></video>
-                <div class="play">▶</div>
-                <div class="volume-control" onclick="event.stopPropagation(); videoPortfolio.toggleVolume(this)" style="position:absolute;top:10px;right:10px;background:rgba(0,0,0,0.7);color:white;border:none;border-radius:50%;width:35px;height:35px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;z-index:10;">🔊</div>
+            <div class="thumb">
+                <video src="${videoUrl}" loop muted playsinline preload="metadata" style="width:100%;height:100%;object-fit:cover;border-radius:12px;"></video>
+                <div class="video-controls">
+                    <div class="play-overlay">▶</div>
+                    <div class="volume-control" title="Toggle volume">🔊</div>
+                    <div class="fullscreen-btn" title="Fullscreen">⛶</div>
+                </div>
                 <div class="overlay">
                     <span class="category">${video.type}</span>
                 </div>
@@ -83,38 +86,171 @@ class VideoPortfolio {
         
         const videoElement = card.querySelector('video');
         const thumbElement = card.querySelector('.thumb');
+        const playOverlay = card.querySelector('.play-overlay');
+        const volumeControl = card.querySelector('.volume-control');
+        const fullscreenBtn = card.querySelector('.fullscreen-btn');
         
         if (videoElement && thumbElement) {
+            // Stop all other videos when this one starts
+            const stopAllOtherVideos = () => {
+                document.querySelectorAll('.card video').forEach(v => {
+                    if (v !== videoElement) {
+                        v.pause();
+                        v.currentTime = 0;
+                        v.muted = true;
+                    }
+                });
+            };
+
             // Desktop hover events
             thumbElement.addEventListener('mouseenter', () => {
+                stopAllOtherVideos();
+                videoElement.currentTime = 0; // Reset to start
                 videoElement.play().catch(() => {});
+                playOverlay.style.opacity = '0';
             });
             
             thumbElement.addEventListener('mouseleave', () => {
                 videoElement.pause();
                 videoElement.currentTime = 0;
+                videoElement.muted = true;
+                volumeControl.textContent = '🔊';
+                playOverlay.style.opacity = '1';
             });
             
-            // Mobile touch events
+            // Mobile touch events - toggle play/pause
             thumbElement.addEventListener('touchstart', (e) => {
+                if (e.target.classList.contains('volume-control') || e.target.classList.contains('fullscreen-btn')) {
+                    return; // Let button handlers deal with it
+                }
+                
                 e.preventDefault();
+                stopAllOtherVideos();
+                
                 if (videoElement.paused) {
+                    videoElement.currentTime = 0;
                     videoElement.play().catch(() => {});
+                    playOverlay.style.opacity = '0';
                 } else {
                     videoElement.pause();
+                    playOverlay.style.opacity = '1';
                 }
             });
-            
-            // Click for mobile
-            thumbElement.addEventListener('click', (e) => {
-                // Prevent opening lightbox when clicking video controls
-                if (e.target.tagName === 'VIDEO') {
-                    e.stopPropagation();
+
+            // Volume control
+            volumeControl.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (videoElement.muted) {
+                    videoElement.muted = false;
+                    videoElement.volume = 0.5;
+                    volumeControl.textContent = '🔊';
+                } else {
+                    videoElement.muted = true;
+                    volumeControl.textContent = '🔇';
+                }
+            });
+
+            // Fullscreen for mobile
+            fullscreenBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.openMobileFullscreen(videoElement, video);
+            });
+
+            // Keyboard support
+            card.addEventListener('keydown', (e) => {
+                if (e.key === ' ' || e.key === 'Enter') {
+                    e.preventDefault();
+                    if (videoElement.paused) {
+                        stopAllOtherVideos();
+                        videoElement.play().catch(() => {});
+                    } else {
+                        videoElement.pause();
+                    }
                 }
             });
         }
         
         return card;
+    }
+
+    openMobileFullscreen(videoElement, videoData) {
+        // Create fullscreen modal
+        const modal = document.createElement('div');
+        modal.className = 'mobile-fullscreen-modal';
+        modal.innerHTML = `
+            <div class="fullscreen-header">
+                <h3>${videoData.title}</h3>
+                <button class="close-fullscreen">✕</button>
+            </div>
+            <div class="fullscreen-video-container">
+                <video src="${videoElement.src}" controls autoplay playsinline style="width:100%;height:auto;max-height:80vh;object-fit:contain;">
+                </video>
+            </div>
+            <div class="fullscreen-controls">
+                <button class="fs-play-pause">⏯</button>
+                <button class="fs-volume">🔊</button>
+                <input type="range" class="fs-progress" min="0" max="100" value="0">
+                <span class="fs-time">0:00 / 0:00</span>
+            </div>
+        `;
+
+        document.body.appendChild(modal);
+        document.body.style.overflow = 'hidden';
+
+        const fsVideo = modal.querySelector('video');
+        const closeBtn = modal.querySelector('.close-fullscreen');
+        const playPauseBtn = modal.querySelector('.fs-play-pause');
+        const volumeBtn = modal.querySelector('.fs-volume');
+        const progressBar = modal.querySelector('.fs-progress');
+        const timeDisplay = modal.querySelector('.fs-time');
+
+        // Close functionality
+        const closeFullscreen = () => {
+            document.body.removeChild(modal);
+            document.body.style.overflow = '';
+        };
+
+        closeBtn.addEventListener('click', closeFullscreen);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeFullscreen();
+        });
+
+        // Video controls
+        playPauseBtn.addEventListener('click', () => {
+            if (fsVideo.paused) {
+                fsVideo.play();
+                playPauseBtn.textContent = '⏸';
+            } else {
+                fsVideo.pause();
+                playPauseBtn.textContent = '▶';
+            }
+        });
+
+        volumeBtn.addEventListener('click', () => {
+            fsVideo.muted = !fsVideo.muted;
+            volumeBtn.textContent = fsVideo.muted ? '🔇' : '🔊';
+        });
+
+        // Progress bar
+        fsVideo.addEventListener('timeupdate', () => {
+            if (fsVideo.duration) {
+                const progress = (fsVideo.currentTime / fsVideo.duration) * 100;
+                progressBar.value = progress;
+                
+                const currentMin = Math.floor(fsVideo.currentTime / 60);
+                const currentSec = Math.floor(fsVideo.currentTime % 60);
+                const durationMin = Math.floor(fsVideo.duration / 60);
+                const durationSec = Math.floor(fsVideo.duration % 60);
+                
+                timeDisplay.textContent = `${currentMin}:${currentSec.toString().padStart(2, '0')} / ${durationMin}:${durationSec.toString().padStart(2, '0')}`;
+            }
+        });
+
+        progressBar.addEventListener('input', () => {
+            if (fsVideo.duration) {
+                fsVideo.currentTime = (progressBar.value / 100) * fsVideo.duration;
+            }
+        });
     }
 
     setupEventListeners() {
@@ -203,22 +339,6 @@ class VideoPortfolio {
         });
 
         return false;
-    }
-
-    toggleVolume(button) {
-        const video = button.parentElement.querySelector('video');
-        if (video) {
-            if (video.muted) {
-                video.muted = false;
-                video.volume = 0.3;
-                button.textContent = '🔊';
-                button.title = 'Mute video';
-            } else {
-                video.muted = true;
-                button.textContent = '🔇';
-                button.title = 'Unmute video';
-            }
-        }
     }
 
     setupFooterVideos() {
