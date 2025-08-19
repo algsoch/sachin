@@ -84,3 +84,9 @@ temp/
 # *.mov
 # *.avi
 # *.mkv
+
+# ignore video files
+assets/**/*.mp4
+assets/**/*.mov
+assets/**/*.avi
+src/assets/**/*.mp4

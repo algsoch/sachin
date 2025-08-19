@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5,user-scalable=yes">
+    <title>Mobile Test - edited.frame</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .test-info {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 12px;
+            z-index: 9999;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-info">
+        Screen: <span id="screenSize"></span><br>
+        Viewport: <span id="viewportSize"></span>
+    </div>
+    
+    <div class="container">
+        <header>
+            <div class="brand">
+                <div class="logo">
+                    <img src="assets/logo.jpg" alt="edited.frame Logo" class="logo-img">
+                </div>
+                <div class="brand-text">
+                    <h1>edited.frame</h1>
+                    <div class="tagline">Sachin | Video Editor</div>
+                </div>
+            </div>
+            
+            <nav>
+                <a href="#portfolio" class="nav-link">
+                    <span class="nav-icon">💼</span>
+                    <span class="nav-text">Work</span>
+                </a>
+                <a href="#services" class="nav-link">
+                    <span class="nav-icon">⚡</span>
+                    <span class="nav-text">Services</span>
+                </a>
+                <a href="#contact" class="nav-link">
+                    <span class="nav-icon">📧</span>
+                    <span class="nav-text">Contact</span>
+                </a>
+                <a href="#contact" class="nav-cta">
+                    <span class="cta-text">Get Quote</span>
+                    <span class="cta-icon">→</span>
+                </a>
+            </nav>
+        </header>
+
+        <section class="hero">
+            <div class="hero-left">
+                <h2>Mobile Test Page</h2>
+                <div class="ctas">
+                    <button class="btn primary">
+                        <span>Test Button 1</span>
+                        <i class="arrow">→</i>
+                    </button>
+                    <button class="btn secondary">
+                        <span>Test Button 2</span>
+                        <i class="spark">✨</i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section id="portfolio" class="section">
+            <h3>Portfolio Test</h3>
+            <div class="grid" id="testGrid">
+                <!-- Test videos will be loaded by JavaScript -->
+            </div>
+        </section>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script>
+        function updateScreenInfo() {
+            document.getElementById('screenSize').textContent = `${screen.width}x${screen.height}`;
+            document.getElementById('viewportSize').textContent = `${window.innerWidth}x${window.innerHeight}`;
+        }
+        
+        updateScreenInfo();
+        window.addEventListener('resize', updateScreenInfo);
+        
+        // Test console for JavaScript errors
+        console.log('Mobile test page loaded successfully');
+        
+        // Test if VideoPortfolio is available
+        setTimeout(() => {
+            if (window.videoPortfolio) {
+                console.log('✅ VideoPortfolio loaded successfully');
+            } else {
+                console.error('❌ VideoPortfolio not loaded');
+            }
+        }, 1000);
+    </script>
+</body>
+</html>

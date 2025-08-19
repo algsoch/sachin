@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test - Video Portfolio</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Video Portfolio Test</h2>
+        
+        <!-- Test single video card -->
+        <div class="card" data-type="trading-reel">
+            <div class="thumb">
+                <video 
+                    src="assets/trading (1).mp4"
+                    muted 
+                    loop 
+                    playsinline 
+                    preload="metadata"
+                    style="width:100%;height:100%;object-fit:cover;border-radius:12px;">
+                </video>
+                <div class="play">▶</div>
+                <div class="overlay">
+                    <span class="category">Trading Reel</span>
+                </div>
+            </div>
+            <div class="meta">
+                <h4>Test Trading Video</h4>
+                <p>Trading Reel</p>
+            </div>
+        </div>
+        
+        <!-- Test video loading -->
+        <div style="margin-top: 20px; padding: 20px; background: rgba(255,255,255,0.1); border-radius: 12px;">
+            <h3>Direct Video Test:</h3>
+            <video controls width="300" height="300" style="object-fit: cover;">
+                <source src="assets/trading (1).mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+        
+        <!-- Test navbar on mobile -->
+        <div style="margin-top: 20px;">
+            <h3>Test Mobile Navbar (resize window to &lt;768px):</h3>
+            <header style="margin: 20px 0;">
+                <div class="brand">
+                    <img src="assets/logo.jpg" alt="logo" class="logo-img">
+                    <div class="brand-text">
+                        <h1>Sachin</h1>
+                        <span class="tagline">Video Editor</span>
+                    </div>
+                </div>
+                <nav>
+                    <a href="#home" class="nav-link">
+                        <div class="nav-icon">🏠</div>
+                        <span class="nav-text">Home</span>
+                    </a>
+                    <a href="#portfolio" class="nav-link">
+                        <div class="nav-icon">🎬</div>
+                        <span class="nav-text">Portfolio</span>
+                    </a>
+                    <a href="#services" class="nav-link">
+                        <div class="nav-icon">⚡</div>
+                        <span class="nav-text">Services</span>
+                    </a>
+                    <a href="#contact" class="nav-link nav-cta">
+                        Let's Connect
+                    </a>
+                </nav>
+            </header>
+        </div>
+    </div>
+</body>
+</html>

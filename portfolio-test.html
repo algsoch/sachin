@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Grid Test</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <section id="portfolio" class="section">
+            <h3>Edits - Test</h3>
+            <div class="filters">
+                <button class="filter active">All</button>
+                <button class="filter">Trading Reels</button>
+            </div>
+
+            <div class="grid" id="testGrid">
+                <!-- Test cards will be added here -->
+            </div>
+        </section>
+    </div>
+
+    <script>
+        console.log('Portfolio test script starting...');
+        
+        // Simple test video data
+        const testVideos = [
+            { filename: 'trading (1).mp4', title: 'Test Video 1', category: 'trading-reel', type: 'Trading Reel' },
+            { filename: 'trading (2).mp4', title: 'Test Video 2', category: 'trading-reel', type: 'Trading Reel' },
+            { filename: 'motion graphic (1).mp4', title: 'Test Video 3', category: 'motion-graphic', type: 'Motion Graphics' }
+        ];
+        
+        function createTestCard(video) {
+            console.log('Creating test card for:', video.filename);
+            
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.dataset.type = video.category;
+            
+            const videoUrl = `assets/${video.filename}`;
+            console.log('Video URL:', videoUrl);
+            
+            card.innerHTML = `
+                <div class="thumb">
+                    <video 
+                        src="${videoUrl}"
+                        muted 
+                        loop 
+                        playsinline 
+                        preload="metadata"
+                        style="width:100%;height:100%;object-fit:cover;border-radius:12px;opacity:1;"
+                        onloadeddata="console.log('✓ Video loaded:', '${video.filename}')"
+                        onerror="console.error('✗ Video failed:', '${videoUrl}')">
+                    </video>
+                    <div class="play">▶</div>
+                    <div class="overlay">
+                        <span class="category">${video.type}</span>
+                    </div>
+                </div>
+                <div class="meta">
+                    <h4>${video.title}</h4>
+                    <p>${video.type}</p>
+                </div>
+            `;
+            
+            return card;
+        }
+        
+        // Wait for DOM to be ready
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('DOM ready, creating test grid...');
+            
+            const testGrid = document.getElementById('testGrid');
+            if (!testGrid) {
+                console.error('Test grid not found!');
+                return;
+            }
+            
+            testVideos.forEach((video, index) => {
+                const card = createTestCard(video);
+                testGrid.appendChild(card);
+            });
+            
+            console.log('Test grid created with', testVideos.length, 'videos');
+        });
+    </script>
+</body>
+</html>

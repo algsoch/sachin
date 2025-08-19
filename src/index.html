@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5,user-scalable=yes" />
   <title>edited.frame — Sachin Prajapati | Video Editor</title>
   
   <!-- Preload critical fonts -->
@@ -317,10 +317,10 @@
           </div>
 
           <div class="contact-methods">
-            <div class="contact-method ">>
+            <div class="contact-method">
               <div class="method-icon">📧</div>
               <div class="method-content">
-                <span class="method-label">Email )</span>
+                <span class="method-label">Email</span>
                 <a href="mailto:connectwithsachin06@gmail.com" class="method-link">
                   connectwithsachin06@gmail.com
                 </a>
@@ -472,16 +472,11 @@
 
   <!-- Lightbox -->
   <div id="lightbox" class="lightbox" onclick="closeLightbox(event)">
-    <video id="lightboxVideo" controls></video>
+    <video id="lightboxVideo" controls controlsList="nodownload"></video>
   </div>
 
   <script src="js/main.js"></script>
   <script>
-    // Initialize app when DOM is loaded
-    document.addEventListener('DOMContentLoaded', () => {
-      window.videoPortfolio = new VideoPortfolio();
-    });
-    
     // Additional performance optimization
     window.addEventListener('load', () => {
       // Ensure loading spinner is hidden after everything loads

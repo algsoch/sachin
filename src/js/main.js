@@ -1,32 +1,23 @@
-// Main JavaScript functionality for the video portfolio website with Performance Optimization
+// Video Portfolio JavaScript - Clean Version
 
 class VideoPortfolio {
     constructor() {
         this.lightbox = document.getElementById('lightbox');
         this.lightboxVideo = document.getElementById('lightboxVideo');
         this.workGrid = document.getElementById('workGrid');
-        this.filterButtons = document.querySelectorAll('.filter');
         this.videos = [];
-        this.loadedVideos = new Set();
-        this.intersectionObserver = null;
         
         this.init();
     }
 
     init() {
-        // Hide loading spinner first
         this.hideLoadingSpinner();
-        
         this.loadVideos();
+        this.renderVideoGrid();
         this.setupEventListeners();
-        this.setupFilterButtons();
-        this.setupServiceShowcases();
-        
-        // Initialize lazy loading
-        this.initIntersectionObserver();
-        
-        // Setup footer videos with lazy loading
         this.setupFooterVideos();
+        
+        console.log('VideoPortfolio initialized successfully');
     }
 
     hideLoadingSpinner() {
@@ -35,117 +26,26 @@ class VideoPortfolio {
             setTimeout(() => {
                 spinner.classList.add('hidden');
                 document.body.classList.add('loaded');
-                setTimeout(() => {
-                    spinner.style.display = 'none';
-                }, 500);
             }, 500);
         } else {
             document.body.classList.add('loaded');
         }
     }
 
-    initIntersectionObserver() {
-        this.intersectionObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const video = entry.target;
-                    const src = video.dataset.src;
-                    if (src && !this.loadedVideos.has(src)) {
-                        this.loadVideo(video, src);
-                    }
-                }
-            });
-        }, { 
-            threshold: 0.1,
-            rootMargin: '50px'
-        });
-    }
-
-    loadVideo(video, src) {
-        if (this.loadedVideos.has(src)) return;
-        
-        this.loadedVideos.add(src);
-        video.src = src;
-        video.load();
-        
-        video.addEventListener('loadedmetadata', () => {
-            video.style.opacity = '1';
-            video.play().catch(() => {});
-        });
-    }
-
-    // Video database based on asset folder structure
     loadVideos() {
         this.videos = [
-            {
-                filename: 'trading (1).mp4',
-                title: 'Technical Analysis Trading',
-                category: 'trading-reel',
-                type: 'Trading Reel'
-            },
-            {
-                filename: 'trading (2).mp4',
-                title: 'Market Movement Analysis',
-                category: 'trading-reel',
-                type: 'Trading Reel'
-            },
-            {
-                filename: 'trading (3).mp4',
-                title: 'Forex Trading Strategy',
-                category: 'trading-reel',
-                type: 'Trading Reel'
-            },
-            {
-                filename: 'trading (4).mp4',
-                title: 'Crypto Trading Guide',
-                category: 'trading-reel',
-                type: 'Trading Reel'
-            },
-            {
-                filename: 'tradind 5.mp4',
-                title: 'Options Trading Basics',
-                category: 'trading-reel',
-                type: 'Trading Reel'
-            },
-            {
-                filename: 'educational.mp4',
-                title: 'Investment Fundamentals',
-                category: 'educational-video',
-                type: 'Educational Video'
-            },
-            {
-                filename: 'educational (2).mp4',
-                title: 'Risk Management Guide',
-                category: 'educational-video',
-                type: 'Educational Video'
-            },
-            {
-                filename: 'motion graphic (1).mp4',
-                title: 'Dynamic Logo Animation',
-                category: 'motion-graphic',
-                type: 'Motion Graphics'
-            },
-            {
-                filename: 'motion graphic (2).mp4',
-                title: 'Data Visualization',
-                category: 'motion-graphic',
-                type: 'Motion Graphics'
-            },
-            {
-                filename: 'motion graphic (3).mp4',
-                title: 'Brand Identity Animation',
-                category: 'motion-graphic',
-                type: 'Motion Graphics'
-            },
-            {
-                filename: 'sub vdo.mp4',
-                title: 'Social Media Promo',
-                category: 'social-media',
-                type: 'Social Media Edit'
-            }
+            { filename: 'trading (1).mp4', title: 'Technical Analysis', category: 'trading-reel', type: 'Trading Reel' },
+            { filename: 'trading (2).mp4', title: 'Market Analysis', category: 'trading-reel', type: 'Trading Reel' },
+            { filename: 'trading (3).mp4', title: 'Forex Strategy', category: 'trading-reel', type: 'Trading Reel' },
+            { filename: 'trading (4).mp4', title: 'Crypto Guide', category: 'trading-reel', type: 'Trading Reel' },
+            { filename: 'tradind 5.mp4', title: 'Options Trading', category: 'trading-reel', type: 'Trading Reel' },
+            { filename: 'educational.mp4', title: 'Investment Guide', category: 'educational-video', type: 'Educational' },
+            { filename: 'educational (2).mp4', title: 'Risk Management', category: 'educational-video', type: 'Educational' },
+            { filename: 'motion graphic (1).mp4', title: 'Logo Animation', category: 'motion-graphic', type: 'Motion Graphics' },
+            { filename: 'motion graphic (2).mp4', title: 'Data Visualization', category: 'motion-graphic', type: 'Motion Graphics' },
+            { filename: 'motion graphic (3).mp4', title: 'Brand Animation', category: 'motion-graphic', type: 'Motion Graphics' },
+            { filename: 'sub vdo.mp4', title: 'Social Media', category: 'social-media', type: 'Social Media' }
         ];
-
-        this.renderVideoGrid();
     }
 
     renderVideoGrid() {
@@ -153,28 +53,24 @@ class VideoPortfolio {
         
         this.workGrid.innerHTML = '';
         
-        this.videos.forEach((video, index) => {
-            const videoCard = this.createVideoCard(video, index);
-            this.workGrid.appendChild(videoCard);
+        this.videos.forEach(video => {
+            const card = this.createVideoCard(video);
+            this.workGrid.appendChild(card);
         });
     }
 
-    createVideoCard(video, index) {
+    createVideoCard(video) {
         const card = document.createElement('div');
         card.className = 'card';
         card.dataset.type = video.category;
         
+        const videoUrl = `assets/${video.filename}`;
+        
         card.innerHTML = `
-            <div class="thumb" onclick="videoPortfolio.openLightbox('https://sachi2.blob.core.windows.net/videos/${encodeURIComponent(video.filename)}')">
-                <video 
-                    data-src="https://sachi2.blob.core.windows.net/videos/${encodeURIComponent(video.filename)}"
-                    muted 
-                    loop 
-                    playsinline 
-                    preload="none"
-                    style="width:100%;height:100%;object-fit:cover;border-radius:12px;opacity:0;transition:opacity 0.3s ease;">
-                </video>
+            <div class="thumb" onclick="videoPortfolio.openLightbox('${videoUrl}')">
+                <video src="${videoUrl}" loop muted playsinline preload="metadata" controls style="width:100%;height:100%;object-fit:cover;border-radius:12px;"></video>
                 <div class="play">▶</div>
+                <div class="volume-control" onclick="event.stopPropagation(); videoPortfolio.toggleVolume(this)" style="position:absolute;top:10px;right:10px;background:rgba(0,0,0,0.7);color:white;border:none;border-radius:50%;width:35px;height:35px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;z-index:10;">🔊</div>
                 <div class="overlay">
                     <span class="category">${video.type}</span>
                 </div>
@@ -185,17 +81,43 @@ class VideoPortfolio {
             </div>
         `;
         
-        // Add intersection observer to the video element
         const videoElement = card.querySelector('video');
-        if (this.intersectionObserver && videoElement) {
-            this.intersectionObserver.observe(videoElement);
+        const thumbElement = card.querySelector('.thumb');
+        
+        if (videoElement && thumbElement) {
+            // Desktop hover events
+            thumbElement.addEventListener('mouseenter', () => {
+                videoElement.play().catch(() => {});
+            });
+            
+            thumbElement.addEventListener('mouseleave', () => {
+                videoElement.pause();
+                videoElement.currentTime = 0;
+            });
+            
+            // Mobile touch events
+            thumbElement.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                if (videoElement.paused) {
+                    videoElement.play().catch(() => {});
+                } else {
+                    videoElement.pause();
+                }
+            });
+            
+            // Click for mobile
+            thumbElement.addEventListener('click', (e) => {
+                // Prevent opening lightbox when clicking video controls
+                if (e.target.tagName === 'VIDEO') {
+                    e.stopPropagation();
+                }
+            });
         }
         
         return card;
     }
 
     setupEventListeners() {
-        // Lightbox close functionality
         if (this.lightbox) {
             this.lightbox.addEventListener('click', (e) => {
                 if (e.target === this.lightbox) {
@@ -204,75 +126,18 @@ class VideoPortfolio {
             });
         }
 
-        // Escape key to close lightbox
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 this.closeLightbox();
             }
         });
-
-        // Contact form handling
-        const contactForm = document.getElementById('contactForm');
-        if (contactForm) {
-            contactForm.addEventListener('submit', (e) => this.handleContactForm(e));
-        }
-
-        // Smooth scroll for navigation
-        document.querySelectorAll('nav a[href^="#"]').forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const target = document.querySelector(link.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth' });
-                }
-            });
-        });
     }
 
-    setupFilterButtons() {
-        this.filterButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                // Remove active class from all buttons
-                this.filterButtons.forEach(btn => btn.classList.remove('active'));
-                // Add active class to clicked button
-                button.classList.add('active');
-                
-                // Get filter value from onclick attribute or data attribute
-                const onclickAttr = button.getAttribute('onclick');
-                if (onclickAttr) {
-                    const filterValue = onclickAttr.match(/'([^']+)'/)[1];
-                    this.filterGrid(filterValue);
-                }
-            });
-        });
-
-        // Set "All" as default active
-        const allButton = document.querySelector('.filter[onclick*="all"]');
-        if (allButton) {
-            allButton.classList.add('active');
-        }
-    }
-
-    filterGrid(filter) {
-        const cards = document.querySelectorAll('#workGrid .card');
-        
-        cards.forEach((card, index) => {
-            const shouldShow = filter === 'all' || card.dataset.type === filter;
-            
-            if (shouldShow) {
-                card.style.display = 'block';
-                card.style.animation = `fadeIn 0.3s ease forwards ${index * 0.1}s`;
-            } else {
-                card.style.display = 'none';
-            }
-        });
-    }
-
-    openLightbox(src) {
+    openLightbox(videoSrc) {
         if (this.lightbox && this.lightboxVideo) {
-            this.lightboxVideo.src = src;
+            this.lightboxVideo.src = videoSrc;
             this.lightbox.style.display = 'flex';
-            this.lightboxVideo.play().catch(() => {});
+            this.lightboxVideo.play();
         }
     }
 
@@ -284,196 +149,126 @@ class VideoPortfolio {
         }
     }
 
-    // Setup footer videos with lazy loading
-    setupFooterVideos() {
-        const footerVideos = document.querySelectorAll('.footer-video[data-src]');
-        
-        footerVideos.forEach(video => {
-            if (this.intersectionObserver) {
-                this.intersectionObserver.observe(video);
+    filterGrid(type) {
+        const cards = this.workGrid.querySelectorAll('.card');
+        cards.forEach(card => {
+            if (type === 'all' || card.dataset.type === type) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
             }
         });
     }
 
-    // Setup Service Video Showcases
-    setupServiceShowcases() {
-        const serviceItems = document.querySelectorAll('.service-item[data-service]');
+    handleContactForm(event) {
+        event.preventDefault();
         
-        serviceItems.forEach(item => {
-            item.addEventListener('click', (e) => {
-                e.preventDefault();
-                const serviceType = item.getAttribute('data-service');
-                const showcase = document.getElementById(`${serviceType}-showcase`);
-                
-                // Close all other showcases
-                document.querySelectorAll('.service-video-showcase').forEach(otherShowcase => {
-                    if (otherShowcase !== showcase) {
-                        otherShowcase.classList.remove('active');
-                        // Stop all videos in closed showcases
-                        const videos = otherShowcase.querySelectorAll('video');
-                        videos.forEach(video => {
-                            video.pause();
-                            video.currentTime = 0;
-                        });
-                    }
-                });
-                
-                // Remove active state from all service items
-                document.querySelectorAll('.service-item').forEach(otherItem => {
-                    otherItem.classList.remove('active');
-                });
-                
-                // Toggle current showcase
-                if (showcase) {
-                    const isActive = showcase.classList.contains('active');
-                    
-                    if (!isActive) {
-                        // Open showcase
-                        item.classList.add('active');
-                        showcase.classList.add('active');
-                        
-                        // Auto-play videos when showcase opens
-                        setTimeout(() => {
-                            const videos = showcase.querySelectorAll('video');
-                            videos.forEach(video => {
-                                video.play().catch(() => {});
-                            });
-                        }, 300);
-                    } else {
-                        // Close showcase
-                        item.classList.remove('active');
-                        showcase.classList.remove('active');
-                        
-                        // Pause videos when showcase closes
-                        const videos = showcase.querySelectorAll('video');
-                        videos.forEach(video => {
-                            video.pause();
-                            video.currentTime = 0;
-                        });
-                    }
-                }
-            });
-        });
-    }
-
-    // Contact form handling with Discord webhook
-    async handleContactForm(e) {
-        e.preventDefault();
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const budget = document.getElementById('budget').value;
+        const message = document.getElementById('message').value;
         
-        const formData = {
-            name: document.getElementById('name').value,
-            email: document.getElementById('email').value,
-            budget: document.getElementById('budget').value,
-            message: document.getElementById('message').value
+        const webhookData = {
+            embeds: [{
+                title: "🎬 New Project Inquiry - edited.frame",
+                color: 0x7B2FF2,
+                fields: [
+                    { name: "👤 Name", value: name, inline: true },
+                    { name: "📧 Email", value: email, inline: true },
+                    { name: "💰 Budget", value: budget || "Not specified", inline: true },
+                    { name: "📝 Project Details", value: message }
+                ],
+                footer: { text: "edited.frame Contact Form" },
+                timestamp: new Date().toISOString()
+            }]
         };
 
-        const formMsgElement = document.getElementById('formMsg');
-        
-        try {
-            const discordPayload = {
-                embeds: [{
-                    title: "🎬 New Project Inquiry - edited.frame",
-                    color: 7506394, // Purple color
-                    fields: [
-                        {
-                            name: "👤 Client Name",
-                            value: formData.name,
-                            inline: true
-                        },
-                        {
-                            name: "📧 Email",
-                            value: formData.email,
-                            inline: true
-                        },
-                        {
-                            name: "💰 Budget",
-                            value: formData.budget || "Not specified",
-                            inline: true
-                        },
-                        {
-                            name: "📝 Project Details",
-                            value: formData.message
-                        }
-                    ],
-                    footer: {
-                        text: "edited.frame Portfolio Contact Form"
-                    },
-                    timestamp: new Date().toISOString()
-                }]
-            };
-
-            const response = await fetch('https://discord.com/api/webhooks/1407102230620016660/PktP90bwhlLKelQ5wwScuke9qmYjuKoVLjxFAVcR0dBGheqdUyXmTXwBazVB70GVtffL', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(discordPayload)
-            });
-
+        fetch('https://discord.com/api/webhooks/1286005199334703104/JwMLOSb0hxq-QQn_5MiqUBIVoXNWAhQ5EcI7rDy_MU8KTG5O8GQJOy5uIDbfpSSdF6lN', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(webhookData)
+        })
+        .then(response => {
+            const msgElement = document.getElementById('formMsg');
             if (response.ok) {
-                formMsgElement.textContent = 'Message sent successfully! I\'ll get back to you within 24 hours.';
-                formMsgElement.style.color = '#27ae60';
-                
-                // Clear form
-                e.target.reset();
-                
-                // Hide success message after 5 seconds
-                setTimeout(() => {
-                    formMsgElement.textContent = '';
-                }, 5000);
+                msgElement.innerHTML = '<span style="color: #4ade80;">✅ Message sent successfully!</span>';
+                event.target.reset();
             } else {
-                throw new Error('Failed to send message');
+                throw new Error('Failed to send');
             }
-        } catch (error) {
-            console.error('Error sending message:', error);
-            
-            // Fallback to email client
-            const subject = encodeURIComponent(`New project from ${formData.name}`);
-            const body = encodeURIComponent(
-                `Name: ${formData.name}\n` +
-                `Email: ${formData.email}\n` +
-                `Budget: ${formData.budget}\n\n` +
-                `Message:\n${formData.message}`
-            );
+        })
+        .catch(error => {
+            const msgElement = document.getElementById('formMsg');
+            msgElement.innerHTML = '<span style="color: #f87171;">❌ Failed to send message.</span>';
+        });
 
-            window.location.href = `mailto:connectwithsachin06@gmail.com?subject=${subject}&body=${body}`;
-            
-            formMsgElement.textContent = 
-                'Opening mail client as backup... If nothing happens, please email me directly.';
-            formMsgElement.style.color = '#ffa502';
+        return false;
+    }
+
+    toggleVolume(button) {
+        const video = button.parentElement.querySelector('video');
+        if (video) {
+            if (video.muted) {
+                video.muted = false;
+                video.volume = 0.3;
+                button.textContent = '🔊';
+                button.title = 'Mute video';
+            } else {
+                video.muted = true;
+                button.textContent = '🔇';
+                button.title = 'Unmute video';
+            }
         }
     }
-}
 
-// Global functions for onclick handlers
-function filterGrid(filter) {
-    if (window.videoPortfolio) {
-        window.videoPortfolio.filterGrid(filter);
+    setupFooterVideos() {
+        // Setup footer videos with local assets instead of Azure blob
+        const footerVideos = document.querySelectorAll('.footer-video[data-src]');
+        
+        // Use local assets for better reliability
+        const localAssets = [
+            'assets/trading (1).mp4',
+            'assets/educational.mp4', 
+            'assets/trading (2).mp4',
+            'assets/motion graphic (1).mp4'
+        ];
+        
+        footerVideos.forEach((video, index) => {
+            if (localAssets[index]) {
+                video.src = localAssets[index];
+                video.removeAttribute('data-src');
+                
+                // Add hover interactions
+                const parentItem = video.closest('.service-video-item');
+                if (parentItem) {
+                    parentItem.addEventListener('mouseenter', () => {
+                        video.play().catch(() => {});
+                    });
+                    
+                    parentItem.addEventListener('mouseleave', () => {
+                        video.pause();
+                        video.currentTime = 0;
+                    });
+                }
+            }
+        });
     }
 }
 
-function closeLightbox(e) {
-    if (e && e.target !== e.currentTarget) return;
-    if (window.videoPortfolio) {
-        window.videoPortfolio.closeLightbox();
-    }
-}
-
+// Global functions
 function scrollToId(id) {
-    const element = document.getElementById(id);
-    if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
-    }
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
 }
 
 function sendEmail(event) {
-    if (window.videoPortfolio) {
-        return window.videoPortfolio.handleContactForm(event);
-    }
-    return false;
+    return window.videoPortfolio?.handleContactForm(event) || false;
 }
 
-// Initialize when page loads
+function filterGrid(type) {
+    window.videoPortfolio?.filterGrid(type);
+}
+
+// Initialize
 document.addEventListener('DOMContentLoaded', () => {
     window.videoPortfolio = new VideoPortfolio();
 });

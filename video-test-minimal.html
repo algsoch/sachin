@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Test - Minimal</title>
+    <style>
+        body { background: #000; color: white; font-family: Arial, sans-serif; padding: 20px; }
+        .video-container { margin: 20px 0; padding: 20px; border: 1px solid #333; }
+        video { width: 200px; height: 200px; object-fit: cover; border: 2px solid #7b2ff2; }
+        .status { margin-top: 10px; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <h1>Portfolio Video Loading Test</h1>
+    
+    <div class="video-container">
+        <h3>Test 1: Direct video element</h3>
+        <video controls muted>
+            <source src="assets/trading (1).mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <div class="status">Direct video with controls</div>
+    </div>
+
+    <div class="video-container">
+        <h3>Test 2: Portfolio-style video (no controls)</h3>
+        <video id="portfolioVideo" muted loop playsinline preload="metadata" style="width:200px;height:200px;object-fit:cover;">
+            <source src="assets/trading (1).mp4" type="video/mp4">
+        </video>
+        <div class="status" id="portfolioStatus">Portfolio-style video</div>
+    </div>
+
+    <div class="video-container">
+        <h3>Test 3: Dynamic video creation (like portfolio does)</h3>
+        <div id="dynamicContainer"></div>
+        <div class="status" id="dynamicStatus">Dynamic video container</div>
+    </div>
+
+    <script>
+        // Test portfolio video
+        const portfolioVideo = document.getElementById('portfolioVideo');
+        const portfolioStatus = document.getElementById('portfolioStatus');
+        
+        portfolioVideo.addEventListener('loadedmetadata', () => {
+            portfolioStatus.textContent = 'Portfolio video loaded successfully ✓';
+            portfolioStatus.style.color = '#4ade80';
+        });
+        
+        portfolioVideo.addEventListener('error', (e) => {
+            portfolioStatus.textContent = 'Portfolio video failed to load ✗';
+            portfolioStatus.style.color = '#f87171';
+            console.error('Portfolio video error:', e);
+        });
+
+        // Test dynamic creation
+        const dynamicContainer = document.getElementById('dynamicContainer');
+        const dynamicStatus = document.getElementById('dynamicStatus');
+        
+        const dynamicVideo = document.createElement('video');
+        dynamicVideo.src = 'assets/trading (1).mp4';
+        dynamicVideo.muted = true;
+        dynamicVideo.loop = true;
+        dynamicVideo.playsinline = true;
+        dynamicVideo.preload = 'metadata';
+        dynamicVideo.style.cssText = 'width:200px;height:200px;object-fit:cover;border:2px solid #7b2ff2;';
+        
+        dynamicVideo.addEventListener('loadedmetadata', () => {
+            dynamicStatus.textContent = 'Dynamic video loaded successfully ✓';
+            dynamicStatus.style.color = '#4ade80';
+        });
+        
+        dynamicVideo.addEventListener('error', (e) => {
+            dynamicStatus.textContent = 'Dynamic video failed to load ✗';
+            dynamicStatus.style.color = '#f87171';
+            console.error('Dynamic video error:', e);
+        });
+        
+        dynamicContainer.appendChild(dynamicVideo);
+
+        // Test hover functionality
+        dynamicVideo.addEventListener('mouseenter', () => {
+            dynamicVideo.play().catch(err => console.log('Play failed:', err));
+        });
+        
+        dynamicVideo.addEventListener('mouseleave', () => {
+            dynamicVideo.pause();
+            dynamicVideo.currentTime = 0;
+        });
+    </script>
+</body>
+</html>
