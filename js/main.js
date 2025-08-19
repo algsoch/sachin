@@ -1,4 +1,4 @@
-// Main JavaScript functionality for the video portfolio website
+// Main JavaScript functionality for the video portfolio website with Performance Optimization
 
 class VideoPortfolio {
     constructor() {
@@ -7,15 +7,71 @@ class VideoPortfolio {
         this.workGrid = document.getElementById('workGrid');
         this.filterButtons = document.querySelectorAll('.filter');
         this.videos = [];
+        this.loadedVideos = new Set();
+        this.intersectionObserver = null;
         
         this.init();
     }
 
     init() {
+        // Hide loading spinner first
+        this.hideLoadingSpinner();
+        
         this.loadVideos();
         this.setupEventListeners();
         this.setupFilterButtons();
         this.setupServiceShowcases();
+        
+        // Initialize lazy loading
+        this.initIntersectionObserver();
+        
+        // Setup footer videos with lazy loading
+        this.setupFooterVideos();
+    }
+
+    hideLoadingSpinner() {
+        const spinner = document.getElementById('loadingSpinner');
+        if (spinner) {
+            setTimeout(() => {
+                spinner.classList.add('hidden');
+                document.body.classList.add('loaded');
+                setTimeout(() => {
+                    spinner.style.display = 'none';
+                }, 500);
+            }, 500);
+        } else {
+            document.body.classList.add('loaded');
+        }
+    }
+
+    initIntersectionObserver() {
+        this.intersectionObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const video = entry.target;
+                    const src = video.dataset.src;
+                    if (src && !this.loadedVideos.has(src)) {
+                        this.loadVideo(video, src);
+                    }
+                }
+            });
+        }, { 
+            threshold: 0.1,
+            rootMargin: '50px'
+        });
+    }
+
+    loadVideo(video, src) {
+        if (this.loadedVideos.has(src)) return;
+        
+        this.loadedVideos.add(src);
+        video.src = src;
+        video.load();
+        
+        video.addEventListener('loadedmetadata', () => {
+            video.style.opacity = '1';
+            video.play().catch(() => {});
+        });
     }
 
     // Video database based on asset folder structure
@@ -107,15 +163,14 @@ class VideoPortfolio {
         card.dataset.type = video.category;
         
         card.innerHTML = `
-            <div class="thumb" onclick="videoPortfolio.openLightbox('assets/${video.filename}')">
+            <div class="thumb" onclick="videoPortfolio.openLightbox('https://sachi2.blob.core.windows.net/videos/${encodeURIComponent(video.filename)}')">
                 <video 
-                    src="assets/${video.filename}" 
+                    data-src="https://sachi2.blob.core.windows.net/videos/${encodeURIComponent(video.filename)}"
                     muted 
                     loop 
                     playsinline 
-                    preload="metadata"
-                    onloadedmetadata="this.play().catch(()=>{})"
-                    style="width:100%;height:100%;object-fit:cover;border-radius:12px;">
+                    preload="none"
+                    style="width:100%;height:100%;object-fit:cover;border-radius:12px;opacity:0;transition:opacity 0.3s ease;">
                 </video>
                 <div class="play">▶</div>
                 <div class="overlay">
@@ -127,6 +182,12 @@ class VideoPortfolio {
                 <p>${video.type}</p>
             </div>
         `;
+        
+        // Add intersection observer to the video element
+        const videoElement = card.querySelector('video');
+        if (this.intersectionObserver) {
+            this.intersectionObserver.observe(videoElement);
+        }
         
         return card;
     }
@@ -338,6 +399,17 @@ class VideoPortfolio {
         // This method can be used to automatically detect new videos
         // and categorize them based on filename patterns
         console.log('Video categories updated');
+    }
+
+    // Setup footer videos with lazy loading
+    setupFooterVideos() {
+        const footerVideos = document.querySelectorAll('.footer-video[data-src]');
+        
+        footerVideos.forEach(video => {
+            if (this.intersectionObserver) {
+                this.intersectionObserver.observe(video);
+            }
+        });
     }
 
     // Setup Service Video Showcases
