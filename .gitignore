@@ -79,14 +79,14 @@ jspm_packages/
 tmp/
 temp/
 
-# Large video files (comment out if you want to include them)
+# Large video files (DISABLED - using compressed videos now)
 # *.mp4
 # *.mov
 # *.avi
 # *.mkv
 
-# ignore video files
-assets/**/*.mp4
-assets/**/*.mov
-assets/**/*.avi
-src/assets/**/*.mp4
+# DISABLED - now including compressed video files
+# assets/**/*.mp4
+# assets/**/*.mov
+# assets/**/*.avi
+# src/assets/**/*.mp4

@@ -1,1 +1,2 @@
-*.mp4 filter=lfs diff=lfs merge=lfs -text
+# LFS disabled - videos are now compressed and small enough for regular Git
+# *.mp4 filter=lfs diff=lfs merge=lfs -text
