@@ -4,12 +4,19 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>edited.frame — Sachin Prajapati | Video Editor</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+  
+  <!-- Preload critical fonts -->
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Poppins:wght@600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Poppins:wght@600;700&display=swap" rel="stylesheet"></noscript>
+  
   <meta name="description" content="Sachin (edited.frame) — Video editor: viral reels, website videos & brand storytelling." />
   <link rel="icon" href="assets/favicon.ico" type="image/x-icon">
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
+  <!-- Loading spinner -->
+  <div class="loading-spinner" id="loadingSpinner"></div>
+  
   <div class="container">
     <header>
       
@@ -400,8 +407,7 @@
             <div class="service-videos">
               <div class="service-video-item">
                 <div class="service-video-preview">
-                  <video class="footer-video" muted loop playsinline preload="metadata">
-                    <source src="assets/trading (1).mp4" type="video/mp4">
+                  <video class="footer-video" muted loop playsinline preload="none" data-src="https://sachi2.blob.core.windows.net/videos/trading%20(1).mp4">
                     <div class="video-placeholder">📊</div>
                   </video>
                   <div class="video-play-btn">▶</div>
@@ -410,8 +416,7 @@
               </div>
               <div class="service-video-item">
                 <div class="service-video-preview">
-                  <video class="footer-video" muted loop playsinline preload="metadata">
-                    <source src="assets/educational.mp4" type="video/mp4">
+                  <video class="footer-video" muted loop playsinline preload="none" data-src="https://sachi2.blob.core.windows.net/videos/educational.mp4">
                     <div class="video-placeholder">🎬</div>
                   </video>
                   <div class="video-play-btn">▶</div>
@@ -420,8 +425,7 @@
               </div>
               <div class="service-video-item">
                 <div class="service-video-preview">
-                  <video class="footer-video" muted loop playsinline preload="metadata">
-                    <source src="assets/trading (2).mp4" type="video/mp4">
+                  <video class="footer-video" muted loop playsinline preload="none" data-src="https://sachi2.blob.core.windows.net/videos/trading%20(2).mp4">
                     <div class="video-placeholder">💹</div>
                   </video>
                   <div class="video-play-btn">▶</div>
@@ -430,8 +434,7 @@
               </div>
               <div class="service-video-item">
                 <div class="service-video-preview">
-                  <video class="footer-video" muted loop playsinline preload="metadata">
-                    <source src="assets/motion graphic (1).mp4" type="video/mp4">
+                  <video class="footer-video" muted loop playsinline preload="none" data-src="https://sachi2.blob.core.windows.net/videos/motion%20graphic%20(1).mp4">
                     <div class="video-placeholder">🏠</div>
                   </video>
                   <div class="video-play-btn">▶</div>
@@ -473,5 +476,23 @@
   </div>
 
   <script src="js/main.js"></script>
+  <script>
+    // Initialize app when DOM is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+      window.videoPortfolio = new VideoPortfolio();
+    });
+    
+    // Additional performance optimization
+    window.addEventListener('load', () => {
+      // Ensure loading spinner is hidden after everything loads
+      const spinner = document.getElementById('loadingSpinner');
+      if (spinner && !spinner.classList.contains('hidden')) {
+        spinner.classList.add('hidden');
+        setTimeout(() => {
+          spinner.style.display = 'none';
+        }, 500);
+      }
+    });
+  </script>
 </body>
 </html>
