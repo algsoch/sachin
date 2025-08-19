@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>edited.frame — Sachin Prajapati | Video Editor</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+  <meta name="description" content="Sachin (edited.frame) — Video editor: viral reels, website videos & brand storytelling." />
+  <link rel="icon" href="assets/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="brand">
+        <div class="logo">
+          <img src="assets/logo.jpg" alt="edited.frame Logo" class="logo-img">
+        </div>
+        <div class="brand-text">
+          <h1>edited.frame</h1>
+          <div class="tagline">Sachin | Video Editor</div>
+        </div>
+      </div>
+      <nav>
+        <button class="nav-btn" onclick="scrollToId('portfolio')">Work</button>
+        <button class="nav-btn" onclick="scrollToId('services')">Services</button>
+        <button class="nav-btn" onclick="scrollToId('contact')">Contact</button>
+      </nav>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-left">
+        <h2>I Turn Ideas into <span class="highlight">Eye-Catching Reels</span></h2>
+        <p class="hero-subtitle">Professional Video Editing • Viral Social Reels • Visual Storytelling • Lightning-Fast Turnaround</p>
+        <div class="ctas">
+          <button class="btn primary" onclick="scrollToId('portfolio')">
+            <span>View My Work</span>
+            <i class="arrow">→</i>
+          </button>
+          <button class="btn secondary" onclick="scrollToId('contact')">
+            <span>Let's Create Something Epic</span>
+            <i class="spark">✨</i>
+          </button>
+        </div>
+        <div class="services-preview">
+          <div class="services-label">Specializing in:</div>
+          <div class="services-tags">
+            <span class="tag">Instagram Reels</span>
+            <span class="tag">YouTube Shorts</span>
+            <span class="tag">Trading Videos</span>
+          </div>
+        </div>
+      </div>
+
+      <aside class="hero-right">
+        <div class="hero-video-container">
+          <video class="hero-video" autoplay muted loop playsinline>
+            <source src="assets/motion graphic (3).mp4" type="video/mp4">
+            <img src="assets/logo.jpg" alt="hero">
+          </video>
+          <div class="video-overlay">
+            <div class="play-indicator">▶</div>
+          </div>
+        </div>
+        <div class="hero-stats">
+          <div class="stat-item">
+            <div class="stat-icon">🎬</div>
+            <div class="stat-text">Premium Quality Edits</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-icon">⚡</div>
+            <div class="stat-text">48-72 Hour Delivery</div>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <!-- PORTFOLIO -->
+    <section id="portfolio" class="section">
+      <h3>Edits</h3>
+      <div class="filters">
+        <button class="filter active" onclick="filterGrid('all')">All</button>
+        <button class="filter" onclick="filterGrid('trading-reel')">Trading Reels</button>
+        <button class="filter" onclick="filterGrid('educational-video')">Educational Videos</button>
+        <button class="filter" onclick="filterGrid('social-media')">Social Media Edits</button>
+        <button class="filter" onclick="filterGrid('motion-graphic')">Motion Graphics</button>
+      </div>
+
+      <div class="grid" id="workGrid">
+        <!-- Videos will be dynamically loaded by JavaScript -->
+      </div>
+    </section>
+
+    <!-- SERVICES -->
+    <section id="services" class="section">
+      <h3>What I Do</h3>
+      <div class="services-container">
+        <div class="service-category">
+          <div class="service-header">
+            <div class="service-icon">🎬</div>
+            <h4>Social Media Edits</h4>
+          </div>
+          <div class="service-list">
+            <div class="service-item">
+              <span class="bullet">•</span>
+              <span>YouTube Shorts</span>
+            </div>
+            <div class="service-item">
+              <span class="bullet">•</span>
+              <span>Instagram Reels</span>
+            </div>
+            <div class="service-item">
+              <span class="bullet">•</span>
+              <span>Real Estate Videos</span>
+            </div>
+            <div class="service-item">
+              <span class="bullet">•</span>
+              <span>Promo Videos</span>
+            </div>
+          </div>
+          <div class="service-note">
+            <span class="note-icon">*</span>
+            <span>For other video types, please use the contact section to share your exact requirements.</span>
+          </div>
+        </div>
+
+        <div class="workflow-section">
+          <div class="workflow-header">
+            <div class="workflow-icon">⚡</div>
+            <h4>My Workflow</h4>
+          </div>
+          <div class="workflow-steps">
+            <div class="workflow-step">
+              <div class="step-number">1</div>
+              <div class="step-content">
+                <span class="step-title">You Send Details</span>
+                <span class="step-desc">Raw clips + video type, style, references, deadline</span>
+              </div>
+            </div>
+            <div class="workflow-step">
+              <div class="step-number">2</div>
+              <div class="step-content">
+                <span class="step-title">Price & Timeline</span>
+                <span class="step-desc">I provide quote and delivery schedule</span>
+              </div>
+            </div>
+            <div class="workflow-step">
+              <div class="step-number">3</div>
+              <div class="step-content">
+                <span class="step-title">Payment Terms</span>
+                <span class="step-desc">50% upfront for big projects</span>
+              </div>
+            </div>
+            <div class="workflow-step">
+              <div class="step-number">4</div>
+              <div class="step-content">
+                <span class="step-title">Edit & Review</span>
+                <span class="step-desc">I edit → share draft → you give feedback</span>
+              </div>
+            </div>
+            <div class="workflow-step">
+              <div class="step-number">5</div>
+              <div class="step-content">
+                <span class="step-title">Final Delivery</span>
+                <span class="step-desc">HD video delivered after approval & full payment</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="section">
+      <h3>Let's Work Together</h3>
+      <div class="contact-container">
+        <div class="contact-info">
+          <div class="contact-header">
+            <h4>Ready to Create Something Amazing?</h4>
+            <p class="contact-subtitle">Send me your project details and I'll get back to you within 24 hours with a custom quote.</p>
+          </div>
+          
+          <div class="contact-details">
+            <div class="contact-person">
+              <div class="person-avatar">
+                <img src="assets/logo.jpg" alt="Sachin" class="avatar-img">
+              </div>
+              <div class="person-info">
+                <h5>Sachin Prajapati</h5>
+                <span class="person-title">Professional Video Editor</span>
+                <span class="person-brand">edited.frame</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="contact-methods">
+            <div class="contact-method primary-method">
+              <div class="method-icon">📧</div>
+              <div class="method-content">
+                <span class="method-label">Email (Preferred)</span>
+                <a href="mailto:connectwithsachin06@gmail.com" class="method-link">
+                  connectwithsachin06@gmail.com
+                </a>
+              </div>
+            </div>
+            
+            <div class="contact-method">
+              <div class="method-icon">🎬</div>
+              <div class="method-content">
+                <span class="method-label">Instagram</span>
+                <a href="https://www.instagram.com/edited.frame" target="_blank" rel="noopener noreferrer" class="method-link">
+                  @edited.frame
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="contact-cta">
+            <div class="cta-icon">💡</div>
+            <span>Prefer DMs? Message me on Instagram for quick collaborations and updates!</span>
+          </div>
+        </div>
+
+        <div class="contact-form-container">
+          <div class="form-header">
+            <h4>Send Project Details</h4>
+            <p>Fill out the form below with your project requirements</p>
+          </div>
+          <form id="contactForm" class="contact-form" onsubmit="return sendEmail(event)">
+            <div class="form-group">
+              <label for="name">Your Name *</label>
+              <input type="text" id="name" placeholder="John Doe" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="email">Email Address *</label>
+              <input type="email" id="email" placeholder="john@example.com" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="budget">Project Budget (Optional)</label>
+              <input type="text" id="budget" placeholder="$500 - $1000">
+            </div>
+            
+            <div class="form-group">
+              <label for="message">Project Details *</label>
+              <textarea id="message" rows="6" placeholder="Describe your project:&#10;• Video type (Instagram Reel, YouTube Short, etc.)&#10;• Style preferences or references&#10;• Deadline requirements&#10;• Any specific requirements" required></textarea>
+            </div>
+            
+            <button type="submit" class="submit-btn">
+              <span>Send Project Details</span>
+              <i class="btn-icon">→</i>
+            </button>
+            
+            <div id="formMsg" class="form-message"></div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <div class="footer-logo">
+            <img src="assets/logo.jpg" alt="edited.frame" class="footer-logo-img">
+          </div>
+          <div class="footer-info">
+            <h6>edited.frame</h6>
+            <span>Professional Video Editing</span>
+          </div>
+        </div>
+        
+        <div class="footer-links">
+          <div class="footer-section">
+            <h6>Services</h6>
+            <ul>
+              <li>Instagram Reels</li>
+              <li>YouTube Shorts</li>
+              <li>Trading Videos</li>
+              <li>Real Estate</li>
+            </ul>
+          </div>
+          
+          <div class="footer-section">
+            <h6>Connect</h6>
+            <ul>
+              <li><a href="mailto:connectwithsachin06@gmail.com">Email</a></li>
+              <li><a href="https://www.instagram.com/edited.frame" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      
+      <div class="footer-bottom">
+        <div class="copyright">
+          <span>© 2025 edited.frame</span>
+          <span class="separator">•</span>
+          <span>Professional Video Editor</span>
+        </div>
+        <div class="footer-tagline">
+          <span>Built with</span>
+          <span class="heart">❤️</span>
+          <span>and passion for visual storytelling</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Lightbox -->
+  <div id="lightbox" class="lightbox" onclick="closeLightbox(event)">
+    <video id="lightboxVideo" controls></video>
+  </div>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
