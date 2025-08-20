@@ -1012,7 +1012,7 @@
     }
     .thumb{
       width:100%;
-      aspect-ratio:9/16; /* Make videos square like hero section */
+      aspect-ratio:9/16; /* 9:16 aspect ratio for all devices */
       background:var(--glass);
       display:flex;
       align-items:center;
@@ -1032,6 +1032,8 @@
       transition:transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       border-radius:16px;
       filter:brightness(0.95) contrast(1.05);
+      /* Ensure 9:16 aspect ratio is maintained */
+      aspect-ratio: 9/16;
     }
     .card:hover .thumb{
       border:1px solid rgba(123,47,242,0.3);
@@ -3277,7 +3279,7 @@ footer::before{
   }
   
   .service-videos {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(1, 1fr);
     gap: 8px;
     max-width: 200px;
     margin: 0 auto;
@@ -3612,34 +3614,195 @@ footer::before{
   .hero-left h2 {
     font-size: 1.5rem;
   }
+}
+
+/* Small Tablet devices (768px - 900px) - iPad and similar */
+@media (min-width: 769px) and (max-width: 900px) {
+  header {
+    padding: 12px 14px;
+    gap: 8px;
+  }
   
+  .brand {
+    gap: 10px;
+  }
+  
+  .brand-text h1 {
+    font-size: 0.95rem;
+  }
+  
+  .tagline {
+    font-size: 0.65rem;
+    padding: 5px 10px;
+  }
+  
+  nav {
+    gap: 4px;
+    padding: 6px 12px 6px 24px;
+  }
+  
+  .nav-link {
+    padding: 6px 8px;
+    font-size: 0.65rem;
+    min-width: 50px;
+  }
+  
+  .nav-cta {
+    padding: 6px 12px;
+    font-size: 0.65rem;
+    min-width: 70px;
+  }
+  
+  .cta-icon {
+    font-size: 0.55rem;
+  }
+}
+
+/* Medium Tablet devices (901px - 1024px) - Larger tablets */
+@media (min-width: 901px) and (max-width: 1024px) {
+  /* Header and Navigation for Tablets */
+  header {
+    padding: 15px 16px;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  
+  .brand {
+    flex-shrink: 0;
+    gap: 12px;
+  }
+  
+  .logo {
+    width: 42px;
+    height: 42px;
+  }
+  
+  .logo-img {
+    width: 42px;
+    height: 42px;
+  }
+  
+  .brand-text h1 {
+    font-size: 1rem;
+  }
+  
+  .tagline {
+    font-size: 0.7rem;
+    padding: 6px 12px;
+  }
+  
+  nav {
+    gap: 6px;
+    padding: 6px 16px 6px 28px;
+    flex-shrink: 1;
+    min-width: 0;
+  }
+  
+  .nav-link {
+    padding: 6px 10px;
+    font-size: 0.7rem;
+    min-width: 55px;
+    white-space: nowrap;
+  }
+  
+  .nav-text {
+    display: inline;
+  }
+  
+  .nav-icon {
+    display: none; /* Hide icons on tablets to save space */
+  }
+  
+  .nav-cta {
+    padding: 8px 14px;
+    font-size: 0.7rem;
+    min-width: 75px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  
+  .cta-text {
+    display: inline;
+  }
+  
+  .cta-icon {
+    margin-left: 6px;
+    font-size: 0.6rem;
+  }
+
+  /* Portfolio Grid for Tablets */
+  .grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 20px;
+    padding: 20px;
+    margin: 0 auto;
+    max-width: 100%;
+  }
+  
+  .card {
+    min-height: 320px;
+    margin: 8px;
+    padding: 8px;
+  }
+  
+  .card video {
+    min-height: 280px !important;
+  }
+  
+  .thumb {
+    min-height: 320px;
+    aspect-ratio: 9/16; /* Consistent 9:16 ratio */
+    margin: 6px;
+    padding: 6px;
+  }
+  
+  .card .meta h4 {
+    font-size: 16px !important;
+    margin: 0 0 8px;
+  }
+  
+  .card .meta p {
+    font-size: 13px !important;
+  }
+  
+  .overlay .category {
+    font-size: 11px !important;
+    padding: 4px 8px;
+  }
+}
+
+/* Mobile devices (up to 768px) - 1 video per line for 9:16 aspect ratio */
+@media (max-width: 768px) {
   /* Mobile portfolio video improvements */
   .grid {
-    /* Show max 2 columns on mobile for larger videos */
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 16px;
+    /* Single column on mobile for optimal 9:16 video viewing */
+    grid-template-columns: 1fr !important;
+    gap: 20px;
     max-width: 100%;
-    padding: 16px; /* Equal padding on all sides */
+    padding: 20px; /* Equal padding on all sides */
     margin: 0 auto;
     overflow: visible; /* Ensure content isn't clipped */
   }
   
   .card {
     min-width: unset;
-    min-height: 240px; /* Increased size for mobile */
-    margin: 8px; /* Equal margin on all sides */
-    padding: 6px; /* Equal padding on all sides */
+    min-height: 400px; /* Larger for 9:16 single column */
+    margin: 12px auto; /* Center and equal margins */
+    padding: 8px;
+    max-width: 300px; /* Limit width for better aspect ratio */
   }
   
   .card video {
-    min-height: 200px !important; /* Larger videos for mobile */
+    min-height: 350px !important; /* Much larger for 9:16 ratio */
   }
   
   .thumb {
-    min-height: 240px; /* Increased to match card */
+    min-height: 400px; /* Match card height */
+    aspect-ratio: 9/16; /* Enforce 9:16 aspect ratio */
     position: relative;
-    margin: 4px; /* Equal margin on all sides */
-    padding: 4px; /* Equal padding on all sides */
+    margin: 6px;
+    padding: 6px;
   }
   
   /* Responsive meta section for mobile */
@@ -3724,29 +3887,31 @@ footer::before{
   }
 }
 
-/* Extra small mobile - keep 2 columns for consistent experience */
+/* Extra small mobile - maintain single column for 9:16 videos */
 @media (max-width: 480px) {
   .grid {
-    /* Keep 2 columns even on very small screens */
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 12px; /* Slightly smaller gap for tiny screens */
-    padding: 12px; /* Reduced padding for more space */
+    /* Keep single column for optimal 9:16 viewing */
+    grid-template-columns: 1fr !important;
+    gap: 16px;
+    padding: 16px;
     margin: 0 auto;
   }
   
   .card {
-    min-height: 280px; /* Much bigger on single column */
+    min-height: 350px;
     width: 100%;
-    margin: 10px; /* Equal margin on all sides */
-    padding: 8px; /* Equal padding on all sides */
+    margin: 10px auto;
+    padding: 6px;
+    max-width: 280px; /* Smaller max width for tiny screens */
   }
   
   .card video {
-    min-height: 240px !important; /* Much larger videos for small mobile */
+    min-height: 300px !important;
   }
   
   .thumb {
-    min-height: 280px; /* Larger to match card */
+    min-height: 350px;
+    aspect-ratio: 9/16; /* Maintain 9:16 aspect ratio */
     border-radius: 12px;
     margin: 6px; /* Equal margin on all sides */
     padding: 6px; /* Equal padding on all sides */

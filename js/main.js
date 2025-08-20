@@ -102,11 +102,32 @@ class VideoPortfolio {
                 });
             };
 
-            // Desktop hover events (disable on mobile)
-            if (window.innerWidth > 768) {
+            // Enhanced hover events for all devices with video autoplay
+            const isDesktop = window.innerWidth > 768;
+            
+            if (isDesktop) {
+                // Desktop hover functionality with immediate video play
                 thumbElement.addEventListener('mouseenter', () => {
                     stopAllOtherVideos();
                     videoElement.currentTime = 0; // Reset to start
+                    videoElement.muted = true; // Start muted for autoplay
+                    videoElement.play().catch(() => {});
+                    playOverlay.style.opacity = '0';
+                });
+                
+                thumbElement.addEventListener('mouseleave', () => {
+                    videoElement.pause();
+                    videoElement.currentTime = 0;
+                    videoElement.muted = true;
+                    volumeControl.textContent = '🔊';
+                    playOverlay.style.opacity = '1';
+                });
+            } else {
+                // Tablet hover support (for devices with both touch and hover)
+                thumbElement.addEventListener('mouseenter', () => {
+                    stopAllOtherVideos();
+                    videoElement.currentTime = 0;
+                    videoElement.muted = true;
                     videoElement.play().catch(() => {});
                     playOverlay.style.opacity = '0';
                 });
