@@ -1,3 +1,10 @@
+# Sensitive files - DO NOT COMMIT TO GITHUB
+gmail-smtp.php
+contact.php
+*.env
+*.env.local
+*.env.production
+
 # OS generated files
 .DS_Store
 .DS_Store?

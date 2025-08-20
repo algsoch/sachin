@@ -361,25 +361,25 @@
             <h4>Send Project Details</h4>
             <p>Fill out the form below with your project requirements</p>
           </div>
-          <form id="contactForm" class="contact-form" onsubmit="return videoPortfolio.handleContactForm(event)">
+          <form id="contactForm" class="contact-form" method="POST" action="https://formspree.io/f/mvgqjqqg" onsubmit="return videoPortfolio.handleContactForm(event)">
             <div class="form-group">
               <label for="name">Your Name *</label>
-              <input type="text" id="name" placeholder="John Doe" required>
+              <input type="text" id="name" name="name" placeholder="John Doe" required>
             </div>
             
             <div class="form-group">
               <label for="email">Email Address *</label>
-              <input type="email" id="email" placeholder="john@example.com" required>
+              <input type="email" id="email" name="email" placeholder="john@example.com" required>
             </div>
             
             <div class="form-group">
               <label for="budget">Project Budget (Optional)</label>
-              <input type="text" id="budget" placeholder="$500 - $1000">
+              <input type="text" id="budget" name="budget" placeholder="$500 - $1000">
             </div>
             
             <div class="form-group">
               <label for="message">Project Details *</label>
-              <textarea id="message" rows="6" placeholder="Describe your project:&#10;• Video type (Instagram Reel, YouTube Short, etc.)&#10;• Style preferences or references&#10;• Deadline requirements&#10;• Any specific requirements" required></textarea>
+              <textarea id="message" name="message" rows="6" placeholder="Describe your project:&#10;• Video type (Instagram Reel, YouTube Short, etc.)&#10;• Style preferences or references&#10;• Deadline requirements&#10;• Any specific requirements" required></textarea>
             </div>
             
             <button type="submit" class="submit-btn">

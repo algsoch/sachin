@@ -34,10 +34,10 @@ class VideoPortfolio {
 
     loadVideos() {
         this.videos = [
-            { filename: 'trading (1).mp4', title: 'Technical Analysis', category: 'trading-reel', type: 'Trading Reel' },
-            { filename: 'trading (2).mp4', title: 'Market Analysis', category: 'trading-reel', type: 'Trading Reel' },
+            { filename: 'trading (1).mp4', title: 'Candlestick Pattern', category: 'trading-reel', type: 'Trading Reel' },
+            { filename: 'trading (2).mp4', title: 'Support and Resistance', category: 'trading-reel', type: 'Trading Reel' },
             { filename: 'trading (3).mp4', title: 'Forex Strategy', category: 'trading-reel', type: 'Trading Reel' },
-            { filename: 'trading (4).mp4', title: 'Crypto Guide', category: 'trading-reel', type: 'Trading Reel' },
+            { filename: 'trading (4).mp4', title: 'Leverage', category: 'trading-reel', type: 'Trading Reel' },
             { filename: 'tradind 5.mp4', title: 'Options Trading', category: 'trading-reel', type: 'Trading Reel' },
             { filename: 'educational.mp4', title: 'Investment Guide', category: 'educational-video', type: 'Educational' },
             { filename: 'educational (2).mp4', title: 'Risk Management', category: 'educational-video', type: 'Educational' },
@@ -118,22 +118,45 @@ class VideoPortfolio {
                 playOverlay.style.opacity = '1';
             });
             
-            // Mobile touch events - toggle play/pause
+            // Mobile touch events - enhanced for single-tap fullscreen
+            let tapTimeout;
             thumbElement.addEventListener('touchstart', (e) => {
                 if (e.target.classList.contains('volume-control') || e.target.classList.contains('fullscreen-btn')) {
                     return; // Let button handlers deal with it
                 }
                 
                 e.preventDefault();
-                stopAllOtherVideos();
                 
-                if (videoElement.paused) {
-                    videoElement.currentTime = 0;
-                    videoElement.play().catch(() => {});
-                    playOverlay.style.opacity = '0';
-                } else {
-                    videoElement.pause();
-                    playOverlay.style.opacity = '1';
+                // Clear any existing timeout
+                if (tapTimeout) {
+                    clearTimeout(tapTimeout);
+                    tapTimeout = null;
+                    // Double tap detected - open fullscreen immediately
+                    this.openMobileFullscreen(videoElement, video);
+                    return;
+                }
+                
+                // Single tap - start video and set timeout for potential double tap
+                tapTimeout = setTimeout(() => {
+                    tapTimeout = null;
+                    stopAllOtherVideos();
+                    
+                    if (videoElement.paused) {
+                        videoElement.currentTime = 0;
+                        videoElement.play().catch(() => {});
+                        playOverlay.style.opacity = '0';
+                    } else {
+                        // If already playing, single tap opens fullscreen
+                        this.openMobileFullscreen(videoElement, video);
+                    }
+                }, 300); // 300ms window for double tap
+            });
+
+            // Single tap on video area for quick fullscreen
+            videoElement.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (window.innerWidth <= 768) { // Mobile only
+                    this.openMobileFullscreen(videoElement, video);
                 }
             });
 
@@ -303,42 +326,207 @@ class VideoPortfolio {
         const email = document.getElementById('email').value;
         const budget = document.getElementById('budget').value;
         const message = document.getElementById('message').value;
-        
-        const webhookData = {
-            embeds: [{
-                title: "🎬 New Project Inquiry - edited.frame",
-                color: 0x7B2FF2,
-                fields: [
-                    { name: "👤 Name", value: name, inline: true },
-                    { name: "📧 Email", value: email, inline: true },
-                    { name: "💰 Budget", value: budget || "Not specified", inline: true },
-                    { name: "📝 Project Details", value: message }
-                ],
-                footer: { text: "edited.frame Contact Form" },
-                timestamp: new Date().toISOString()
-            }]
-        };
 
-        fetch('https://discord.com/api/webhooks/1286005199334703104/JwMLOSb0hxq-QQn_5MiqUBIVoXNWAhQ5EcI7rDy_MU8KTG5O8GQJOy5uIDbfpSSdF6lN', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(webhookData)
-        })
-        .then(response => {
-            const msgElement = document.getElementById('formMsg');
-            if (response.ok) {
-                msgElement.innerHTML = '<span style="color: #4ade80;">✅ Message sent successfully!</span>';
-                event.target.reset();
-            } else {
-                throw new Error('Failed to send');
-            }
-        })
-        .catch(error => {
-            const msgElement = document.getElementById('formMsg');
-            msgElement.innerHTML = '<span style="color: #f87171;">❌ Failed to send message.</span>';
-        });
+        const msgElement = document.getElementById('formMsg');
+        msgElement.innerHTML = '<span style="color: #7b2ff2;">📤 Sending via Formspree...</span>';
+
+        // GitHub Pages deployment - prioritize client-side solutions
+        // Method 1: Formspree (works on GitHub Pages)
+        this.sendViaFormspree(name, email, budget, message, event.target)
+            .catch(() => {
+                // Method 2: EmailJS (backup client-side service)
+                msgElement.innerHTML = '<span style="color: #7b2ff2;">📧 Trying backup method...</span>';
+                return this.sendViaEmailJS(name, email, budget, message, event.target);
+            })
+            .catch(() => {
+                // Method 3: Discord webhook as notification fallback
+                msgElement.innerHTML = '<span style="color: #7b2ff2;">� Sending Discord notification...</span>';
+                return this.sendToDiscord(name, email, budget, message).then(() => {
+                    const msgElement = document.getElementById('formMsg');
+                    msgElement.innerHTML = '<span style="color: #4ade80;">✅ Message sent via Discord! Please also email directly: connectwithsachin06@gmail.com</span>';
+                    event.target.reset();
+                    return true;
+                });
+            })
+            .catch(() => {
+                // All methods failed - show error with direct contact
+                const msgElement = document.getElementById('formMsg');
+                msgElement.innerHTML = '<span style="color: #f87171;">❌ Failed to send message. Please email directly at connectwithsachin06@gmail.com</span>';
+            });
 
         return false;
+    }
+
+    async sendViaGmailSMTP(name, email, budget, message, form) {
+        try {
+            const response = await fetch('gmail-smtp.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, email, budget, message })
+            });
+
+            if (!response.ok) {
+                throw new Error(`Gmail SMTP failed with status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            
+            if (result.success) {
+                const msgElement = document.getElementById('formMsg');
+                msgElement.innerHTML = '<span style="color: #4ade80;">✅ Perfect! Emails sent to both addresses via Gmail SMTP. I\'ll get back to you within 24 hours!</span>';
+                form.reset();
+                console.log('Gmail SMTP email sent successfully');
+                return true;
+            } else {
+                throw new Error(result.message || 'Gmail SMTP failed');
+            }
+        } catch (error) {
+            console.log('Gmail SMTP failed:', error.message);
+            throw error;
+        }
+    }
+
+    async sendViaPHP(name, email, budget, message, form) {
+        const formData = new FormData();
+        formData.append('name', name);
+        formData.append('email', email);
+        formData.append('budget', budget || 'Not specified');
+        formData.append('message', message);
+        
+        const response = await fetch('contact.php', {
+            method: 'POST',
+            body: formData
+        });
+
+        const result = await response.json();
+
+        if (response.ok && result.success) {
+            const msgElement = document.getElementById('formMsg');
+            msgElement.innerHTML = '<span style="color: #4ade80;">✅ Message sent successfully! I\'ll get back to you within 24 hours.</span>';
+            form.reset();
+            return true;
+        } else {
+            throw new Error(result.error || 'PHP backend failed');
+        }
+    }
+
+    async sendViaFormspree(name, email, budget, message, form) {
+        const formData = new FormData();
+        formData.append('name', name);
+        formData.append('email', email);
+        formData.append('budget', budget || 'Not specified');
+        formData.append('message', message);
+        formData.append('_replyto', email);
+        formData.append('_subject', `🎬 New Project Inquiry from ${name} - edited.frame`);
+        
+        // Send only to connectwithsachin06@gmail.com
+        formData.append('_to', 'connectwithsachin06@gmail.com');
+        
+        // Using your new Formspree endpoint
+        const response = await fetch('https://formspree.io/f/mvgqjqqg', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+
+        if (response.ok) {
+            const msgElement = document.getElementById('formMsg');
+            msgElement.innerHTML = '<span style="color: #4ade80;">✅ Message sent successfully! Email sent to connectwithsachin06@gmail.com. I\'ll get back to you within 24 hours.</span>';
+            form.reset();
+            
+            // Also send to Discord as backup
+            this.sendToDiscord(name, email, budget, message).catch(() => {
+                console.log('Discord notification failed, but email was sent successfully');
+            });
+            return true;
+        } else {
+            throw new Error('Formspree failed');
+        }
+    }
+
+    async sendViaEmailJS(name, email, budget, message, form) {
+        // EmailJS requires setup at emailjs.com
+        if (typeof emailjs === 'undefined') {
+            throw new Error('EmailJS not loaded');
+        }
+
+        const templateParams = {
+            from_name: name,
+            from_email: email,
+            budget: budget || 'Not specified',
+            message: message,
+            to_email: 'npdimagine@gmail.com'
+        };
+
+        const response = await emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams);
+        
+        const msgElement = document.getElementById('formMsg');
+        msgElement.innerHTML = '<span style="color: #4ade80;">✅ Message sent successfully via EmailJS!</span>';
+        form.reset();
+        return true;
+    }
+
+    sendViaMailto(name, email, budget, message) {
+        const subject = encodeURIComponent(`New Project Inquiry from ${name}`);
+        const body = encodeURIComponent(
+            `Name: ${name}\n` +
+            `Email: ${email}\n` +
+            `Budget: ${budget || 'Not specified'}\n\n` +
+            `Message:\n${message}\n\n` +
+            `---\nSent from edited.frame contact form`
+        );
+        
+        const mailtoLink = `mailto:npdimagine@gmail.com?subject=${subject}&body=${body}`;
+        window.location.href = mailtoLink;
+        
+        const msgElement = document.getElementById('formMsg');
+        msgElement.innerHTML = '<span style="color: #fbbf24;">📧 Opening your email client... Please send the message manually.</span>';
+    }
+
+    async sendToDiscord(name, email, budget, message) {
+        // Your actual Discord webhook URL
+        const webhookURL = 'https://discord.com/api/webhooks/1407102230620016660/PktP90bwhlLKelQ5wwScuke9qmYjuKoVLjxFAVcR0dBGheqdUyXmTXwBazVB70GVtffL';
+        
+        const embed = {
+            title: "🎬 New Project Inquiry - edited.frame",
+            color: 8067042, // Purple color
+            fields: [
+                { name: "👤 Client Name", value: name, inline: true },
+                { name: "📧 Client Email", value: email, inline: true },
+                { name: "💰 Budget", value: budget || "Not specified", inline: true },
+                { name: "📝 Project Details", value: message.length > 1000 ? message.substring(0, 1000) + "..." : message }
+            ],
+            footer: { 
+                text: "📧 Emails sent to: connectwithsachin06@gmail.com" 
+            },
+            timestamp: new Date().toISOString()
+        };
+
+        const webhookData = { 
+            content: "🚨 **New Project Inquiry Received!** 🚨",
+            embeds: [embed] 
+        };
+
+        try {
+            const response = await fetch(webhookURL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(webhookData)
+            });
+
+            if (!response.ok) {
+                console.log('Discord webhook failed with status:', response.status);
+                throw new Error('Discord webhook failed');
+            }
+            
+            console.log('Discord notification sent successfully');
+            return true;
+        } catch (error) {
+            console.log('Discord notification failed:', error.message);
+            throw error;
+        }
     }
 
     setupFooterVideos() {
