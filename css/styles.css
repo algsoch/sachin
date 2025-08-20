@@ -1146,7 +1146,7 @@
       transition:all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       position:relative;
       overflow:hidden;
-      color: #222;
+      color: #790000;
     }
     
     .service-category::before,
@@ -1174,14 +1174,14 @@
     .workflow-section:hover{
       transform:translateY(-8px) scale(1.02);
       box-shadow:0 30px 80px rgba(123,47,242,0.2);
-      border-color:rgba(123,47,242,0.4);
+      border-color:rgb(195, 8, 8);
     }
     
     .service-header,
     .workflow-header{
       display:flex;
       align-items:center;
-      gap:16px;
+      gap:10px;
       margin-bottom:32px;
       position:relative;
       z-index:1;
@@ -1473,22 +1473,23 @@
       display:flex;
       align-items:flex-start;
       gap:12px;
-      background:rgba(255,255,255,0.08);
+      background:rgb(225, 20, 129);
       -webkit-backdrop-filter:blur(10px);
       backdrop-filter:blur(10px);
       padding:20px;
       border-radius:16px;
       margin-top:20px;
-      border:1px solid rgba(255,255,255,0.1);
+      border:1px solid rgb(199, 185, 185);
       position:relative;
       z-index:1;
-      color:#000000;
+      color:#d00b0b;
       transition:all 0.3s ease;
     }
     
     .service-note:hover{
-      background:rgba(255,255,255,0.12);
-      border-color:rgb(212, 50, 31)58)
+      background:rgba(232, 5, 153, 0.956);
+      border-color:rgb(212, 50, 31);
+      color:#d00b0b;
     }
     
     .note-icon{
@@ -1500,11 +1501,13 @@
     }
     
     .service-note span:last-child{
-      color:#ffffff;
-      font-size:14px;
+      color:#1b0404;
+      font-size:17px;
+      /* font-; */
+      font-family: Verdana, Geneva, Tahoma, sans-serif;
       line-height:1.5;
-      font-weight:500;
-      text-shadow:0 2px 6px rgba(0,0,0,0.8);
+      font-weight:5000;
+      text-shadow:0 2px 6px rgba(197, 143, 143, 0.8);
     }
 
     /* Advanced Animated Workflow Graph */
@@ -3614,23 +3617,68 @@ footer::before{
   .grid {
     /* Show max 2 columns on mobile for larger videos */
     grid-template-columns: repeat(2, 1fr) !important;
-    gap: 12px;
+    gap: 16px;
     max-width: 100%;
-    padding: 0 8px;
+    padding: 16px; /* Equal padding on all sides */
+    margin: 0 auto;
+    overflow: visible; /* Ensure content isn't clipped */
   }
   
   .card {
     min-width: unset;
-    min-height: 200px; /* Increased from 100px */
+    min-height: 240px; /* Increased size for mobile */
+    margin: 8px; /* Equal margin on all sides */
+    padding: 6px; /* Equal padding on all sides */
   }
   
   .card video {
-    min-height: 160px !important; /* Much larger videos */
+    min-height: 200px !important; /* Larger videos for mobile */
   }
   
   .thumb {
-    min-height: 200px;
+    min-height: 240px; /* Increased to match card */
     position: relative;
+    margin: 4px; /* Equal margin on all sides */
+    padding: 4px; /* Equal padding on all sides */
+  }
+  
+  /* Responsive meta section for mobile */
+  .card .meta {
+    padding: 10px; /* Optimized padding for mobile */
+    margin: 4px; /* Equal margin on all sides */
+    border-radius: 12px;
+    min-height: 45px; /* Ensure enough space for text */
+  }
+  
+  .card .meta h4 {
+    font-size: 13px !important; /* Better readable size for mobile */
+    margin: 0 0 4px;
+    line-height: 1.2;
+    word-wrap: break-word; /* Prevent text overflow */
+    overflow-wrap: break-word;
+    hyphens: auto;
+  }
+  
+  .card .meta p {
+    font-size: 11px !important; /* Optimized size for mobile */
+    line-height: 1.3;
+    word-wrap: break-word; /* Prevent text overflow */
+    overflow-wrap: break-word;
+  }
+  
+  /* Mobile responsive category overlay */
+  .overlay {
+    padding: 12px; /* Reduced padding for mobile */
+  }
+  
+  .overlay .category {
+    font-size: 10px !important; /* Smaller for mobile */
+    padding: 3px 6px;
+    border-radius: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 120px; /* Prevent overflow */
   }
   
   /* Enhanced mobile touch targets */
@@ -3639,11 +3687,36 @@ footer::before{
     background: rgba(0,0,0,0.3);
   }
   
+  .play-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(123,47,242,0.9);
+    color: white;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    z-index: 10;
+    /* Enhanced visibility for mobile */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    border: 3px solid rgba(255,255,255,0.8);
+  }
+  
   .volume-control, .fullscreen-btn {
     width: 45px !important;
     height: 45px !important;
     font-size: 18px !important;
     /* Larger touch targets for mobile */
+    background: rgba(0,0,0,0.7);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   
   .fullscreen-btn {
@@ -3651,27 +3724,72 @@ footer::before{
   }
 }
 
-/* Extra small mobile - single column for maximum video size */
+/* Extra small mobile - keep 2 columns for consistent experience */
 @media (max-width: 480px) {
   .grid {
-    /* Single column on very small screens */
-    grid-template-columns: 1fr !important;
-    gap: 16px;
-    padding: 0 12px;
+    /* Keep 2 columns even on very small screens */
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px; /* Slightly smaller gap for tiny screens */
+    padding: 12px; /* Reduced padding for more space */
+    margin: 0 auto;
   }
   
   .card {
-    min-height: 250px; /* Even larger on single column */
+    min-height: 280px; /* Much bigger on single column */
     width: 100%;
+    margin: 10px; /* Equal margin on all sides */
+    padding: 8px; /* Equal padding on all sides */
   }
   
   .card video {
-    min-height: 200px !important;
+    min-height: 240px !important; /* Much larger videos for small mobile */
   }
   
   .thumb {
-    min-height: 250px;
+    min-height: 280px; /* Larger to match card */
     border-radius: 12px;
+    margin: 6px; /* Equal margin on all sides */
+    padding: 6px; /* Equal padding on all sides */
+  }
+  
+  /* Responsive meta section for small mobile */
+  .card .meta {
+    padding: 12px; /* Better padding for readability */
+    margin: 6px; /* Equal margin on all sides */
+    border-radius: 10px;
+    min-height: 50px; /* More space for text */
+  }
+  
+  .card .meta h4 {
+    font-size: 14px !important; /* Larger font for better readability */
+    margin: 0 0 6px;
+    line-height: 1.2;
+    word-wrap: break-word; /* Prevent text overflow */
+    overflow-wrap: break-word;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+  }
+  
+  .card .meta p {
+    font-size: 12px !important; /* Larger font for better readability */
+    line-height: 1.3;
+    word-wrap: break-word; /* Prevent text overflow */
+    overflow-wrap: break-word;
+  }
+  
+  /* Small mobile responsive category overlay */
+  .overlay {
+    padding: 10px; /* Optimized padding */
+  }
+  
+  .overlay .category {
+    font-size: 11px !important; /* Readable size for small mobile */
+    padding: 4px 8px;
+    border-radius: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 140px; /* More space on single column */
   }
   
   /* Better spacing for single column layout */

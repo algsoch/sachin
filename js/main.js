@@ -102,30 +102,31 @@ class VideoPortfolio {
                 });
             };
 
-            // Desktop hover events
-            thumbElement.addEventListener('mouseenter', () => {
-                stopAllOtherVideos();
-                videoElement.currentTime = 0; // Reset to start
-                videoElement.play().catch(() => {});
-                playOverlay.style.opacity = '0';
-            });
-            
-            thumbElement.addEventListener('mouseleave', () => {
-                videoElement.pause();
-                videoElement.currentTime = 0;
-                videoElement.muted = true;
-                volumeControl.textContent = '🔊';
-                playOverlay.style.opacity = '1';
-            });
-            
-            // Mobile touch events - enhanced for single-tap fullscreen
-            let tapTimeout;
-            thumbElement.addEventListener('touchstart', (e) => {
-                if (e.target.classList.contains('volume-control') || e.target.classList.contains('fullscreen-btn')) {
-                    return; // Let button handlers deal with it
-                }
+            // Desktop hover events (disable on mobile)
+            if (window.innerWidth > 768) {
+                thumbElement.addEventListener('mouseenter', () => {
+                    stopAllOtherVideos();
+                    videoElement.currentTime = 0; // Reset to start
+                    videoElement.play().catch(() => {});
+                    playOverlay.style.opacity = '0';
+                });
                 
+                thumbElement.addEventListener('mouseleave', () => {
+                    videoElement.pause();
+                    videoElement.currentTime = 0;
+                    videoElement.muted = true;
+                    volumeControl.textContent = '🔊';
+                    playOverlay.style.opacity = '1';
+                });
+            }
+            
+            // Mobile touch events - only for play overlay and specific buttons
+            let tapTimeout;
+            
+            // Only allow fullscreen on play overlay, not entire thumbnail
+            playOverlay.addEventListener('touchstart', (e) => {
                 e.preventDefault();
+                e.stopPropagation();
                 
                 // Clear any existing timeout
                 if (tapTimeout) {
@@ -136,7 +137,7 @@ class VideoPortfolio {
                     return;
                 }
                 
-                // Single tap - start video and set timeout for potential double tap
+                // Single tap on play overlay - start video and set timeout for potential double tap
                 tapTimeout = setTimeout(() => {
                     tapTimeout = null;
                     stopAllOtherVideos();
@@ -152,13 +153,33 @@ class VideoPortfolio {
                 }, 300); // 300ms window for double tap
             });
 
-            // Single tap on video area for quick fullscreen
-            videoElement.addEventListener('click', (e) => {
-                e.stopPropagation();
-                if (window.innerWidth <= 768) { // Mobile only
-                    this.openMobileFullscreen(videoElement, video);
+            // Prevent thumb container from triggering fullscreen
+            thumbElement.addEventListener('touchstart', (e) => {
+                // Only allow specific elements to trigger actions
+                if (e.target.classList.contains('volume-control') || 
+                    e.target.classList.contains('fullscreen-btn') ||
+                    e.target.classList.contains('play-overlay')) {
+                    return; // Let their individual handlers deal with it
+                }
+                
+                // For video area, only start/pause, no fullscreen
+                if (e.target === videoElement) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    stopAllOtherVideos();
+                    if (videoElement.paused) {
+                        videoElement.currentTime = 0;
+                        videoElement.play().catch(() => {});
+                        playOverlay.style.opacity = '0';
+                    } else {
+                        videoElement.pause();
+                        playOverlay.style.opacity = '1';
+                    }
                 }
             });
+
+            // Remove the previous problematic touchstart event listener
 
             // Volume control
             volumeControl.addEventListener('click', (e) => {
