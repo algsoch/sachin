@@ -378,90 +378,25 @@ class ReviewSystem {
     }
 
     async sendDiscordNotification(reviewData) {
-        // Discord webhook URL - you'll need to replace this with your actual webhook URL
-        const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1407102211410100254/fNN55ODTWP39kEuaPruY9A2Tt8TDuiwtQBOtIKr64Z8vSKhD8ki_9nAQmFesLTEHaLV5';
-        
-        try {
-            const stars = '⭐'.repeat(reviewData.rating);
-            const emptyStars = '☆'.repeat(5 - reviewData.rating);
-            const ratingDisplay = stars + emptyStars;
-            
-            const embed = {
-                title: "🎬 New Review Received!",
-                color: 0x7B2FF2, // Purple color matching your theme
-                thumbnail: {
-                    url: "https://cdn.discordapp.com/attachments/1234567890/logo.jpg" // Replace with your logo URL
-                },
-                fields: [
-                    {
-                        name: "👤 Reviewer",
-                        value: reviewData.reviewerName,
-                        inline: true
-                    },
-                    {
-                        name: "📧 Email",
-                        value: reviewData.reviewerEmail || "Not provided",
-                        inline: true
-                    },
-                    {
-                        name: "📱 Instagram",
-                        value: reviewData.reviewerInstagram || "Not provided",
-                        inline: true
-                    },
-                    {
-                        name: "🎯 Project Type",
-                        value: reviewData.projectType,
-                        inline: true
-                    },
-                    {
-                        name: "⭐ Rating",
-                        value: `${ratingDisplay} (${reviewData.rating}/5)`,
-                        inline: true
-                    },
-                    {
-                        name: "🎭 Public Display",
-                        value: reviewData.allowDisplay ? "✅ Yes" : "❌ No",
-                        inline: true
-                    },
-                    {
-                        name: "💬 Review",
-                        value: reviewData.reviewText.length > 1000 ? 
-                               reviewData.reviewText.substring(0, 1000) + "..." : 
-                               reviewData.reviewText,
-                        inline: false
-                    }
-                ],
-                footer: {
-                    text: "edited.frame - Professional Video Editor",
-                    icon_url: "https://cdn.discordapp.com/attachments/1234567890/logo.jpg" // Replace with your logo URL
-                },
-                timestamp: new Date(reviewData.timestamp).toISOString()
-            };
-
-            const discordPayload = {
-                username: "edited.frame Reviews",
-                avatar_url: "https://cdn.discordapp.com/attachments/1234567890/logo.jpg", // Replace with your logo URL
-                content: `📝 **New ${reviewData.rating}-star review received!**`,
-                embeds: [embed]
-            };
-
-            const response = await fetch(DISCORD_WEBHOOK_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(discordPayload)
-            });
-
-            if (response.ok) {
-                console.log('Discord notification sent successfully');
-            } else {
-                console.error('Failed to send Discord notification:', response.status);
-            }
-        } catch (error) {
-            console.error('Error sending Discord notification:', error);
-            // Don't throw error here as we don't want to fail the review submission
+        // Check if Discord notifications are enabled and configured
+        if (!window.CONFIG || !window.CONFIG.discord.enabled || !window.CONFIG.discord.webhookUrl) {
+            console.log('Discord notifications disabled for security in client-side deployment');
+            return;
         }
+        
+        // For security: Discord webhooks should not be called from client-side
+        // This is a placeholder for server-side implementation
+        console.log('Discord notification would be sent (server-side only):', {
+            reviewer: reviewData.reviewerName,
+            rating: reviewData.rating,
+            project: reviewData.projectType
+        });
+        
+        // Note: In production, implement Discord notifications through:
+        // 1. A backend API endpoint
+        // 2. Firebase Functions
+        // 3. Netlify Functions
+        // 4. Vercel API Routes
     }
 
     showFormMessage(message, type) {

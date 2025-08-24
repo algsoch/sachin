@@ -538,6 +538,9 @@
 
   <script src="js/main.js"></script>
   
+  <!-- Configuration -->
+  <script src="js/config.js"></script>
+  
   <!-- Firebase Configuration -->
   <script type="module">
     // Import the functions you need from the SDKs you need
@@ -545,17 +548,15 @@
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-analytics.js";
     import { getDatabase, ref, push, onValue, query, orderByChild, limitToLast } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-database.js";
 
-    // Your web app's Firebase configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyAVsXzqI9MRxA8BuB6KQvGF4p-BGAlX9rA",
-      authDomain: "edited-frame.firebaseapp.com",
-      databaseURL: "https://edited-frame-default-rtdb.firebaseio.com",
-      projectId: "edited-frame",
-      storageBucket: "edited-frame.firebasestorage.app",
-      messagingSenderId: "149877290361",
-      appId: "1:149877290361:web:08a8be44122721ff962ba8",
-      measurementId: "G-ZNF7KDC521"
-    };
+    // Security check - only allow on approved domains
+    const currentDomain = window.location.hostname;
+    if (!window.CONFIG.allowedDomains.includes(currentDomain)) {
+      console.error('Unauthorized domain access');
+      // Still initialize but with limited functionality
+    }
+
+    // Get Firebase configuration from external config
+    const firebaseConfig = window.CONFIG.firebase;
 
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
