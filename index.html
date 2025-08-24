@@ -42,6 +42,10 @@
           <span class="nav-icon">⚡</span>
           <span class="nav-text">Services</span>
         </a>
+        <a href="#reviews" class="nav-link">
+          <span class="nav-icon">⭐</span>
+          <span class="nav-text">Reviews</span>
+        </a>
         <a href="#contact" class="nav-link">
           <span class="nav-icon">📧</span>
           <span class="nav-text">Contact</span>
@@ -393,6 +397,51 @@
       </div>
     </section>
 
+    <!-- REVIEWS -->
+    <section id="reviews" class="section">
+      <h3>Client Reviews</h3>
+      <div class="reviews-container">
+        <div class="reviews-header">
+          <div class="reviews-stats">
+            <div class="stat-item">
+              <div class="stat-number" id="totalReviews">0</div>
+              <div class="stat-label">Total Reviews</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number" id="averageRating">0.0</div>
+              <div class="stat-label">Average Rating</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number" id="satisfactionRate">0%</div>
+              <div class="stat-label">Satisfaction</div>
+            </div>
+          </div>
+          <button class="write-review-btn" onclick="reviewSystem.openReviewModal()">
+            <span class="btn-icon">✍️</span>
+            <span>Write a Review</span>
+          </button>
+        </div>
+
+        <div class="reviews-grid" id="reviewsGrid">
+          <!-- Reviews will be loaded here -->
+          <div class="loading-reviews">
+            <div class="loading-spinner-reviews"></div>
+            <span>Loading reviews...</span>
+          </div>
+        </div>
+
+        <div class="reviews-pagination">
+          <button class="pagination-btn" id="prevBtn" onclick="reviewSystem.previousPage()" disabled>
+            <span>← Previous</span>
+          </button>
+          <span class="pagination-info" id="paginationInfo">Page 1</span>
+          <button class="pagination-btn" id="nextBtn" onclick="reviewSystem.nextPage()" disabled>
+            <span>Next →</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
     <footer class="footer">
       <div class="footer-content-simple">
         <div class="copyright">
@@ -414,7 +463,118 @@
     <video id="lightboxVideo" controls controlsList="nodownload"></video>
   </div>
 
+  <!-- Review Modal -->
+  <div id="reviewModal" class="review-modal" onclick="reviewSystem.closeReviewModal(event)">
+    <div class="review-modal-content" onclick="event.stopPropagation()">
+      <div class="review-modal-header">
+        <h3>Write a Review</h3>
+        <button class="close-modal" onclick="reviewSystem.closeReviewModal()">✕</button>
+      </div>
+      
+      <form id="reviewForm" class="review-form" onsubmit="return reviewSystem.submitReview(event)">
+        <div class="form-group">
+          <label for="reviewerName">Your Name *</label>
+          <input type="text" id="reviewerName" name="reviewerName" placeholder="John Doe" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="reviewerEmail">Email Address (Optional)</label>
+          <input type="email" id="reviewerEmail" name="reviewerEmail" placeholder="john@example.com">
+        </div>
+        
+        <div class="form-group">
+          <label for="reviewerInstagram">Instagram ID (Optional)</label>
+          <input type="text" id="reviewerInstagram" name="reviewerInstagram" placeholder="@yourhandle">
+        </div>
+        
+        <div class="form-group">
+          <label for="projectType">Project Type</label>
+          <select id="projectType" name="projectType" required>
+            <option value="">Select project type</option>
+            <option value="Instagram Reel">Instagram Reel</option>
+            <option value="YouTube Short">YouTube Short</option>
+            <option value="Trading Video">Trading Video</option>
+            <option value="Educational Video">Educational Video</option>
+            <option value="Motion Graphics">Motion Graphics</option>
+            <option value="Promotional Video">Promotional Video</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label>Rating *</label>
+          <div class="star-rating" id="starRating">
+            <span class="star" data-rating="1">★</span>
+            <span class="star" data-rating="2">★</span>
+            <span class="star" data-rating="3">★</span>
+            <span class="star" data-rating="4">★</span>
+            <span class="star" data-rating="5">★</span>
+          </div>
+          <input type="hidden" id="rating" name="rating" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="reviewText">Your Review *</label>
+          <textarea id="reviewText" name="reviewText" rows="5" placeholder="Share your experience working with Sachin..." required></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label class="checkbox-label">
+            <input type="checkbox" id="allowDisplay" name="allowDisplay" checked>
+            <span class="checkmark"></span>
+            I allow this review to be displayed publicly
+          </label>
+        </div>
+        
+        <button type="submit" class="submit-review-btn">
+          <span>Submit Review</span>
+          <i class="btn-icon">✨</i>
+        </button>
+        
+        <div id="reviewFormMsg" class="form-message"></div>
+      </form>
+    </div>
+  </div>
+
   <script src="js/main.js"></script>
+  
+  <!-- Firebase Configuration -->
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-analytics.js";
+    import { getDatabase, ref, push, onValue, query, orderByChild, limitToLast } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-database.js";
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyAVsXzqI9MRxA8BuB6KQvGF4p-BGAlX9rA",
+      authDomain: "edited-frame.firebaseapp.com",
+      databaseURL: "https://edited-frame-default-rtdb.firebaseio.com",
+      projectId: "edited-frame",
+      storageBucket: "edited-frame.firebasestorage.app",
+      messagingSenderId: "149877290361",
+      appId: "1:149877290361:web:08a8be44122721ff962ba8",
+      measurementId: "G-ZNF7KDC521"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const database = getDatabase(app);
+
+    // Make Firebase available globally for the review system
+    window.firebaseApp = app;
+    window.firebaseDb = database;
+    window.firebaseRef = ref;
+    window.firebasePush = push;
+    window.firebaseOnValue = onValue;
+    window.firebaseQuery = query;
+    window.firebaseOrderByChild = orderByChild;
+    window.firebaseLimitToLast = limitToLast;
+  </script>
+  
+  <script src="js/reviews.js"></script>
+  
   <script>
     // Additional performance optimization
     window.addEventListener('load', () => {
@@ -425,6 +585,11 @@
         setTimeout(() => {
           spinner.style.display = 'none';
         }, 500);
+      }
+      
+      // Initialize review system after page load
+      if (window.reviewSystem) {
+        reviewSystem.init();
       }
     });
   </script>
